@@ -12,17 +12,14 @@ import androidx.compose.ui.unit.dp
 import com.example.milsaboresapp.R
 
 @Composable
-fun HomeScreen(navigateToProductos: () -> Unit) {
+fun ProductosScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        Text("¡Bienvenido a Mil Sabores!", style = MaterialTheme.typography.headlineMedium)
-        Button(onClick = navigateToProductos) {
-            Text("Ver productos")
-        }
+        Text("Nuestros Productos", style = MaterialTheme.typography.headlineMedium)
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo App",
@@ -36,6 +33,6 @@ fun HomeScreen(navigateToProductos: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen {}
+fun ProductosScreenPreview() {
+    ProductosScreen()
 }
