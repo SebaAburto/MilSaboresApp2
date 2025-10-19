@@ -1,6 +1,7 @@
 package com.example.milsaboresapp.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -10,12 +11,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.milsaboresapp.R
+import com.example.milsaboresapp.ui.theme.ColorLight
 
 @Composable
 fun ProductosScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(ColorLight)
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {

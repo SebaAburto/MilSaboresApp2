@@ -19,6 +19,7 @@ fun DrawerMenu(
     Column(
         modifier = modifier
             .fillMaxHeight()
+            .width(240.dp)
             .background(ColorBackground)
             .padding(top = 48.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.Start,
