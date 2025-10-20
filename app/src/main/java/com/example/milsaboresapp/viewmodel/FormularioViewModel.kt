@@ -26,17 +26,21 @@ class FormularioViewModel: ViewModel() {
     fun onAceptarTerminosChange(valor: Boolean) {
         _estado.update { it.copy(aceptaTerminos = valor) }
     }
+    fun onRepetirClaveChange(valor: String) {
+        _estado.value = _estado.value.copy(repetirClave = valor)
+    }
     fun validarFormulario(): Boolean {
         val estadoActual = _estado.value
         val errores = UsuarioErrores(
             nombre = if (estadoActual.nombre.isBlank()) "Campo requerido" else null ,
             correo = if (!estadoActual.correo.contains("@")) "Correo inválido" else null,
             clave = if (estadoActual.clave.length < 8) "Mínimo 8 caracteres" else null,
+            repetirClave = if (estadoActual.repetirClave != estadoActual.clave) "Las contraseñas no coinciden" else null,
             direccion = if (estadoActual.direccion.isBlank()) "Campo requerido" else null
         )
 
         val hayErrores = listOfNotNull(
-            errores.nombre, errores.correo, errores.clave, errores.direccion
+            errores.nombre, errores.correo, errores.clave, errores.repetirClave, errores.direccion
         ).isNotEmpty()
         _estado.update { it.copy(errores = errores) }
         return !hayErrores
