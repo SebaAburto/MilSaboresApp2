@@ -51,7 +51,7 @@ fun MilSaboresAppTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography, // tu Typography personalizado
+        typography = Typography,
         content = content
     )
 }

@@ -6,16 +6,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.milsaboresapp.R // Necesario para R.drawable.placeholder_image
+import com.example.milsaboresapp.R
 import com.example.milsaboresapp.model.Producto
 import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
 fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val imageName = producto.imageUrl
+    val imageResId = context.resources.getIdentifier(
+        imageName,
+        "drawable",
+        context.packageName
+    )
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -24,9 +32,10 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // NOTA: Reemplaza R.drawable.placeholder_image con una imagen válida
+
             Image(
-                painter = painterResource(id = R.drawable.logo),
+
+                painter = painterResource(id = if (imageResId != 0) imageResId else R.drawable.logo),
                 contentDescription = "Imagen de ${producto.nombre}",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -63,13 +72,6 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
-
-                    if (producto.destacado) {
-                        AssistChip(
-                            onClick = { /* No-op */ },
-                            label = { Text("🌟 Destacado") }
-                        )
-                    }
                 }
             }
         }
