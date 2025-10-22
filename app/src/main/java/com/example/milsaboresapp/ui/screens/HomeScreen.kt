@@ -5,11 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,17 +20,19 @@ import com.example.milsaboresapp.R
 import com.example.milsaboresapp.data.remote.ProductosSource
 import com.example.milsaboresapp.ui.components.ProductCard
 import com.example.milsaboresapp.ui.theme.ColorLight
-import com.example.milsaboresapp.ui.theme.ColorPrimary
+
 
 @Composable
 fun HomeScreen(navigateToProductos: () -> Unit) {
 
     val productosDestacados = ProductosSource.productos.filter { it.destacado }
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ColorLight),
+            .background(ColorLight)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
@@ -38,7 +41,7 @@ fun HomeScreen(navigateToProductos: () -> Unit) {
             contentDescription = "Logo App",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp),
+                .height(380.dp),
             contentScale = ContentScale.FillWidth
         )
 

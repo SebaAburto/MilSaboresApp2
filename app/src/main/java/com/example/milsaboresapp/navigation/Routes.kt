@@ -7,3 +7,6 @@ object Home
 
 @Serializable
 object Productos
+
+@Serializable
+object Registro

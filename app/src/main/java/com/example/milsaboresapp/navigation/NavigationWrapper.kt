@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.milsaboresapp.ui.components.AppTopBar
 import com.example.milsaboresapp.ui.components.DrawerMenu
+import com.example.milsaboresapp.ui.screens.FormularioScreen
 import com.example.milsaboresapp.ui.screens.HomeScreen
 import com.example.milsaboresapp.ui.screens.ProductosScreen
 import kotlinx.coroutines.launch
@@ -33,6 +34,10 @@ fun NavigationWrapper() {
                 onNavigateToProductos = {
                     navController.navigate("productos")
                     scope.launch { drawerState.close() }
+                },
+                onNavigateToRegistro = {
+                    navController.navigate("registro")
+                    scope.launch { drawerState.close() }
                 }
             )
         }
@@ -52,6 +57,9 @@ fun NavigationWrapper() {
                 }
                 composable("productos") {
                     ProductosScreen()
+                }
+                composable("registro") {
+                    FormularioScreen()
                 }
             }
         }

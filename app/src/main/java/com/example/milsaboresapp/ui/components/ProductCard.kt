@@ -54,8 +54,6 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 Text(
                     text = producto.descripcion,
                     style = MaterialTheme.typography.bodySmall,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(8.dp))

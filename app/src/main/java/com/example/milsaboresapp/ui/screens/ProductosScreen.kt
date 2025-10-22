@@ -33,21 +33,20 @@ fun ProductosScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(ColorLight)
-            .padding(top = 20.dp), // Aplicamos padding superior
+            .padding(top = 20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
 
-        // 1. CABECERA Y LOGO (Tu diseño original)
+        // CABECERA Y LOGO
         Column(
-            modifier = Modifier.padding(horizontal = 20.dp) // Aplicamos padding horizontal aquí
+            modifier = Modifier.padding(horizontal = 20.dp)
         ) {
             Text("Nuestros Productos", style = MaterialTheme.typography.headlineMedium)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // 2. FILTROS DE CATEGORÍA
-        // Usamos LazyRow para una lista horizontal de chips deslizables
+        //LazyRow la lista horizontal de chips deslizables (categorias)
         LazyRow(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

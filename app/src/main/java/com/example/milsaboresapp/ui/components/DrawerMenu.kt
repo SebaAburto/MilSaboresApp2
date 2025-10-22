@@ -14,6 +14,7 @@ import com.example.milsaboresapp.ui.theme.ColorText
 fun DrawerMenu(
     onNavigateToHome: () -> Unit,
     onNavigateToProductos: () -> Unit,
+    onNavigateToRegistro: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -40,5 +41,15 @@ fun DrawerMenu(
         TextButton(onClick = onNavigateToProductos) {
             Text("Productos", color = ColorText)
         }
-    }
+        Spacer(Modifier.height(12.dp))
+
+        // 2. Línea divisoria para separar la opción inferior
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+        // 3. Opción de "Registrarse" (Parte inferior)
+        TextButton(onClick = onNavigateToRegistro) {
+            Text("Registrarse", color = ColorText)
+        }
 }
+    }
+
