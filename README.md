@@ -12,7 +12,7 @@ El objetivo principal es ofrecer una experiencia sencilla e intuitiva para la co
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/usuario/milsaboresapp.git
+   git clone https://github.com/SebaAburto/MilSaboresApp2.git
    ```
 2. Abre el proyecto en **Android Studio**.
 3. Asegúrate de tener configurado un emulador o dispositivo físico con Android 8.0 o superior.
