@@ -16,16 +16,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.milsaboresapp.ui.components.ProductCard // Importar el componente de la tarjeta
 import com.example.milsaboresapp.ui.theme.*
-import com.example.milsaboresapp.viewmodel.ProductViewModel // Importar el ViewModel desde su nueva ubicación
+import com.example.milsaboresapp.viewmodel.ProductViewModel
+import com.example.milsaboresapp.viewmodel.factory.ProductViewModelFactory// Importar el ViewModel desde su nueva ubicación
 import androidx.navigation.NavController
 import com.example.milsaboresapp.model.Producto
+import com.example.milsaboresapp.di.AppGraph
+
 @Composable
 fun ProductosScreen(
     navController: NavController,
     onNavigateToProductDetail: (Producto) -> Unit,
-    viewModel: ProductViewModel = viewModel()
 ) {
-    // Observamos los estados de los datos del ViewModel
+    val viewModel: ProductViewModel = viewModel(
+        factory = ProductViewModelFactory(
+            repository = AppGraph.productosRepo
+        )
+    )
+
     val productos by viewModel.productos.collectAsState()
     val categorias by viewModel.categorias.collectAsState()
     val categoriaSeleccionada by viewModel.categoriaSeleccionada.collectAsState()
@@ -65,7 +72,7 @@ fun ProductosScreen(
             }
         }
 
-        // 3. LISTA DE PRODUCTOS
+        // LISTA DE PRODUCTOS
         if (productos.isEmpty() && categorias.isNotEmpty() && categoriaSeleccionada != "todos") {
             // Mensaje si no hay productos en la categoría seleccionada
             Box(

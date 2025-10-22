@@ -1,6 +1,5 @@
 package com.example.milsaboresapp.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,30 +8,40 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.milsaboresapp.R
-import com.example.milsaboresapp.data.remote.ProductosSource
-import com.example.milsaboresapp.model.Producto
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.milsaboresapp.di.AppGraph
+import com.example.milsaboresapp.ui.components.ContenidoDetalle
 import com.example.milsaboresapp.ui.theme.ColorBackground
 import com.example.milsaboresapp.ui.theme.ColorPrimary
-import com.example.milsaboresapp.ui.theme.ColorPrimaryDark
 import com.example.milsaboresapp.ui.theme.ColorText
-import java.text.NumberFormat
-import java.util.Locale
+import com.example.milsaboresapp.viewmodel.ProductoDetalleViewModel
+import com.example.milsaboresapp.viewmodel.ProductoDetalleViewModelFactory
 import androidx.compose.foundation.layout.WindowInsets
 
+@Composable
+fun provideProductoDetalleViewModel(sku: String): ProductoDetalleViewModel {
+    return viewModel(
+        factory = ProductoDetalleViewModelFactory(
+            sku = sku,
+            productosRepo = AppGraph.productosRepo,
+            carritoRepo = AppGraph.cartRepo
+        )
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductoDetalleScreen(navController: NavController, sku: String?) {
-    val producto = ProductosSource.productos.find { it.sku == sku }
+fun ProductoDetalleScreen(navController: NavController, productoSku: String) {
+
+    val viewModel = provideProductoDetalleViewModel(productoSku)
+    val uiState by viewModel.uiState.collectAsState()
+    val cantidad by viewModel.cantidad.collectAsState()
 
     Scaffold(
         topBar = {
@@ -41,7 +50,7 @@ fun ProductoDetalleScreen(navController: NavController, sku: String?) {
                     Text(
                         "Detalle del Producto",
                         style = MaterialTheme.typography.titleLarge,
-                        color = ColorText // Título en marrón oscuro
+                        color = ColorText
                     )
                 },
                 navigationIcon = {
@@ -55,9 +64,13 @@ fun ProductoDetalleScreen(navController: NavController, sku: String?) {
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = ColorPrimary
-                ),windowInsets = WindowInsets(0.dp) //Lo usé para apegar mas la barra de volver al topbar
+                ),
+                windowInsets = WindowInsets(0.dp)
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
+        // WindowsInset se usa para ajustar el contenido de scaffold para elementos inexistentes (ej: unbottombar)
+
     ) { paddingValues ->
 
         Column(
@@ -68,90 +81,32 @@ fun ProductoDetalleScreen(navController: NavController, sku: String?) {
                 .verticalScroll(rememberScrollState())
         ) {
 
-            if (producto != null) {
-                DetalleContent(producto = producto)
-            } else {
-                Text(
-                    text = "¡Lo sentimos! Producto no encontrado.",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
+
+            when {
+                uiState.isLoading -> {
+                    Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+                uiState.error != null || uiState.producto == null -> {
+                    Text(
+                        text = uiState.error ?: "¡Lo sentimos! Producto no encontrado.",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+                else -> {
+
+                    ContenidoDetalle(
+                        producto = uiState.producto!!,
+                        cantidad = cantidad,
+                        onIncrementar = viewModel::incrementarCantidad,
+                        onDecrementar = viewModel::decrementarCantidad,
+                        onAgregarCarrito = viewModel::agregarACarrito
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun DetalleContent(producto: Producto) {
-    val context = LocalContext.current
-    val imageName = producto.imageUrl
-    val imageResId = context.resources.getIdentifier(imageName, "drawable", context.packageName)
-    val formatter = NumberFormat.getCurrencyInstance(Locale("es", "CL"))
-    val precioFormateado = formatter.format(producto.precio)
-
-
-    // Sección de Imagen
-    Image(
-        painter = painterResource(id = if (imageResId != 0) imageResId else R.drawable.logo),
-        contentDescription = "Imagen de ${producto.nombre}",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(350.dp)
-    )
-
-    // Sección de Detalle
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(ColorBackground)
-            .padding(16.dp)
-    ) {
-
-        // Categoría
-        if (producto.categoria.isNotEmpty()) {
-            Text(
-                text = producto.categoria.uppercase(),
-                style = MaterialTheme.typography.labelMedium,
-                color = ColorText,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-        }
-
-
-        Text(
-            text = producto.nombre,
-            style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 32.sp
-            ),
-            color = ColorPrimaryDark,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        // Precio
-        Text(
-            text = precioFormateado,
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = ColorPrimary,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        // Título de la descripción
-        Text(
-            text = "Descripción del Producto:",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color = ColorText,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        // Descripción
-        Text(
-            text = producto.descripcion,
-            style = MaterialTheme.typography.bodyLarge,
-            color = ColorText
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
     }
 }
