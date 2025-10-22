@@ -15,6 +15,7 @@ fun DrawerMenu(
     onNavigateToHome: () -> Unit,
     onNavigateToProductos: () -> Unit,
     onNavigateToRegistro: () -> Unit,
+    onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -49,6 +50,9 @@ fun DrawerMenu(
         // 3. Opción de "Registrarse" (Parte inferior)
         TextButton(onClick = onNavigateToRegistro) {
             Text("Registrarse", color = ColorText)
+        }
+        TextButton(onClick = onNavigateToLogin) {
+            Text("Iniciar Sesion", color = ColorText)
         }
 }
     }
