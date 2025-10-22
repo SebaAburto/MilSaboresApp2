@@ -12,16 +12,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.milsaboresapp.ui.components.ProductCard // Importar el componente de la tarjeta
 import com.example.milsaboresapp.ui.theme.*
 import com.example.milsaboresapp.viewmodel.ProductViewModel // Importar el ViewModel desde su nueva ubicación
-
+import androidx.navigation.NavController
+import com.example.milsaboresapp.model.Producto
 @Composable
 fun ProductosScreen(
-    // Inyectamos el ViewModel
+    navController: NavController,
+    onNavigateToProductDetail: (Producto) -> Unit,
     viewModel: ProductViewModel = viewModel()
 ) {
     // Observamos los estados de los datos del ViewModel
@@ -83,25 +84,20 @@ fun ProductosScreen(
                 CircularProgressIndicator()
             }
         } else {
-            // Muestra la lista desplazable de productos
+            //lista desplazable de productos
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp), // Padding a los lados
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(productos) { producto ->
-                    // Utilizamos el ProductCard para cada elemento
-                    ProductCard(producto = producto)
+                    ProductCard(
+                        producto = producto, onProductClick = {
+                            onNavigateToProductDetail(producto)
+                        }
+                    )
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProductosScreenPreview() {
-    // NOTA: Para que el Preview funcione con el ViewModel, necesitarías un ViewMdel Mock o
-    // usar un PreviewParameterProvider en un escenario real, pero lo dejamos simple aquí.
-    ProductosScreen(viewModel = viewModel())
 }

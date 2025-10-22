@@ -14,9 +14,10 @@ import com.example.milsaboresapp.R
 import com.example.milsaboresapp.model.Producto
 import java.text.NumberFormat
 import java.util.Locale
+import androidx.compose.foundation.clickable
 
 @Composable
-fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
+fun ProductCard(producto: Producto, modifier: Modifier = Modifier, onProductClick: (Producto) -> Unit) {
     val context = LocalContext.current
     val imageName = producto.imageUrl
     val imageResId = context.resources.getIdentifier(
@@ -27,7 +28,8 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .clickable { onProductClick(producto) },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {

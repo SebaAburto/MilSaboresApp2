@@ -14,7 +14,11 @@ import com.example.milsaboresapp.ui.components.DrawerMenu
 import com.example.milsaboresapp.ui.screens.FormularioScreen
 import com.example.milsaboresapp.ui.screens.HomeScreen
 import com.example.milsaboresapp.ui.screens.ProductosScreen
+import com.example.milsaboresapp.ui.screens.CarritoScreen
+import com.example.milsaboresapp.ui.screens.ProductoDetalleScreen
 import kotlinx.coroutines.launch
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,23 +47,53 @@ fun NavigationWrapper() {
         }
     ) {
         Scaffold(
-            topBar = { AppTopBar(scope, drawerState) }
+            topBar = {
+                AppTopBar(
+                    scope,
+                    drawerState,
+                    onNavigateToCarrito = { navController.navigate("carrito") })
+            }
         ) { paddingValues ->
             NavHost(
                 navController = navController,
                 startDestination = "home",
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica correctamente el padding de Scaffold
+                    .padding(paddingValues)
             ) {
                 composable("home") {
-                    HomeScreen(navigateToProductos = { navController.navigate("productos") })
+                    HomeScreen(
+                        navigateToProductos = { navController.navigate("productos") },
+                        onNavigateToProductDetail = { producto ->
+                            navController.navigate("product_detail_route/${producto.sku}")
+                        }
+                    )
                 }
                 composable("productos") {
-                    ProductosScreen()
+                    ProductosScreen(
+                        navController = navController,
+                        onNavigateToProductDetail = { producto ->
+                            navController.navigate("product_detail_route/${producto.sku}")
+                        })
                 }
                 composable("registro") {
                     FormularioScreen()
+                }
+                composable("carrito") {
+                    CarritoScreen()
+                }
+
+                // BLOQUE CORREGIDO: RUTA DE DETALLE
+                composable(
+                    route = "product_detail_route/{sku}",
+                    arguments = listOf(navArgument("sku") { type = NavType.StringType })
+                ) { backStackEntry ->
+
+                    // 👈 1. DECLARACIÓN: Obtén el SKU del argumento de la ruta
+                    val sku = backStackEntry.arguments?.getString("sku")
+
+                    // 2. LLAMADA: Pasa el NavController y la variable 'sku' a la pantalla.
+                    ProductoDetalleScreen(navController = navController, sku = sku)
                 }
             }
         }
