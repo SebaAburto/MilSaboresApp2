@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
-    // 🚨 CORRECCIÓN: Quitamos la inicialización por defecto.
-    // El repositorio debe ser proporcionado por la Factory.
     private val repository: ProductRepository
 ) : ViewModel() {
 
@@ -19,7 +17,6 @@ class ProductViewModel(
     private val _categorias = MutableStateFlow<List<String>>(emptyList())
     val categorias: StateFlow<List<String>> = _categorias
 
-    // Aquí usamos el repositorio inyectado
     val productos: StateFlow<List<Producto>> = _categoriaSeleccionada
         .mapLatest { categoria ->
             repository.getProductosPorCategoria(categoria)

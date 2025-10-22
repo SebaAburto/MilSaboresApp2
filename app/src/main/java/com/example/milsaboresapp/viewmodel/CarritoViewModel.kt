@@ -42,7 +42,7 @@ class CarritoViewModel (
             initialValue = CarritoUiState()
         )
 
-    fun agregar(item: ItemCarrito) = viewModelScope.launch { repo.agregar(item) }
+    //se pensó en agregar una funcion de "agregar" general, pero se prefirió dejarlo exclusivamente para detalleProducto
     fun incrementar(sku: String) = viewModelScope.launch { repo.incrementar(sku) }
     fun decrementar(sku: String) = viewModelScope.launch { repo.decrementar(sku) }
     fun eliminar(sku: String) = viewModelScope.launch { repo.eliminar(sku) }

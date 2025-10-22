@@ -43,11 +43,13 @@ class ProductoDetalleViewModel(
         cargarProducto()
     }
 
+
+    //Funcion para cargar los datos del producto dentro del detalle
+    //(se crea una copia con los datos)
     private fun cargarProducto() {
         viewModelScope.launch {
             val producto = productosRepo.obtenerProductoPorSku(sku)
 
-            // Usamos la corrección de tipos para evitar el error 'Any'
             _uiState.update { currentState: ProductoDetalleUiState ->
                 if (producto != null) {
                     currentState.copy(producto = producto, isLoading = false, error = null)
@@ -56,9 +58,9 @@ class ProductoDetalleViewModel(
                 }
             }
         }
-    }
+    } //isLoading se usa en caso de que se llame al repositorio y no se ha recibido respuesta.
 
-    // --- Control de Cantidad ---
+    // Control de Cantidad
 
     fun incrementarCantidad() {
         _cantidad.update { it + 1 }
@@ -70,8 +72,7 @@ class ProductoDetalleViewModel(
         }
     }
 
-    // --- Lógica del Carrito ---
-
+    //FUNCION PARA AGREGAR A CARRITO, exclusiva de productoDetalle
     fun agregarACarrito() {
         val producto = uiState.value.producto
         val cantidadActual = cantidad.value

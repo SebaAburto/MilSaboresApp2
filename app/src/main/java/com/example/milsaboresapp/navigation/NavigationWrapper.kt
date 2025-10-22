@@ -83,24 +83,20 @@ fun NavigationWrapper() {
                     CarritoScreen()
                 }
 
-                // BLOQUE CORREGIDO: RUTA DE DETALLE
                 composable(
-                    // 1. RUTA: Define el argumento como '{productoSku}' para coincidir con la pantalla (o usa 'sku')
                     route = "product_detail_route/{productoSku}",
                     arguments = listOf(navArgument("productoSku") { type = NavType.StringType })
                 ) { backStackEntry ->
 
-                    // 2. EXTRACCIÓN: Obtén el valor usando el nombre del argumento definido en 'navArgument'
                     val productoSku = backStackEntry.arguments?.getString("productoSku")
 
-                    // 3. LLAMADA: Llama a la pantalla solo si el SKU existe.
                     if (productoSku != null) {
                         ProductoDetalleScreen(
                             navController = navController,
                             productoSku = productoSku
                         )
                     } else {
-                        // Opcional: Mostrar un error o navegar de vuelta si el SKU es nulo
+                        //Mensaje de error en caso de que el sku sea nulo
                         Text("Error: Producto no especificado")
                     }
                 }

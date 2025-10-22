@@ -33,7 +33,7 @@ private val LightColorScheme = lightColorScheme(
     onBackground = ColorText,
     onSurface = ColorText
 )
-
+//SE PENSÓ EN AGREGAR EN UN INICIO PERO NO SE AGREGÓ EN EL PROYECTO FINAL (opcion para cambiar a tema oscuro)
 @Composable
 fun MilSaboresAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

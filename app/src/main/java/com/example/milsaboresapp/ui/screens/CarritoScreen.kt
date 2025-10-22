@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
@@ -22,6 +21,8 @@ import com.example.milsaboresapp.viewmodel.CarritoViewModel
 import com.example.milsaboresapp.viewmodel.CarritoUiState
 import java.text.NumberFormat
 import java.util.Locale
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 
 // Función para inyectar el ViewModel (usando el AppGraph)
 @Composable
@@ -34,9 +35,6 @@ fun provideCarritoViewModel(): CarritoViewModel {
     })
 }
 
-// ----------------------------------------------------------------------
-// PANTALLA PRINCIPAL
-// ----------------------------------------------------------------------
 @Composable
 fun CarritoScreen(
     viewModel: CarritoViewModel = provideCarritoViewModel()
@@ -47,12 +45,31 @@ fun CarritoScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween, // Separa los elementos
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        // Título y Contador
         Text(
             text = "Tu Carrito (${uiState.count} artículos)",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
+            style = MaterialTheme.typography.headlineSmall
         )
+
+
+        if (uiState.count > 0) { // Solo mostrar si hay ítems
+            Text(
+                text = "Limpiar",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .clickable { viewModel.limpiar() }
+                    .padding(4.dp)
+            )
+        }
+    }
 
         if (uiState.items.isEmpty()) {
             Box(
@@ -84,10 +101,6 @@ fun CarritoScreen(
         }
     }
 }
-
-// ----------------------------------------------------------------------
-// COMPONENTES AUXILIARES
-// ----------------------------------------------------------------------
 
 @Composable
 fun CarritoResumen(
@@ -164,7 +177,7 @@ fun CarritoItemCard(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Control de Cantidad (Add/Remove)
+            // Control de Cantidad
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -183,13 +196,12 @@ fun CarritoItemCard(
 
                 IconButton(onClick = onIncrementar) {
                     Icon(
-                        imageVector = Icons.Default.Add,
+                        imageVector = Icons.Default.KeyboardArrowRight,
                         contentDescription = "Incrementar cantidad"
                     )
                 }
             }
 
-            // Botón Eliminar
             IconButton(onClick = onEliminar) {
                 Icon(
                     imageVector = Icons.Default.Close,

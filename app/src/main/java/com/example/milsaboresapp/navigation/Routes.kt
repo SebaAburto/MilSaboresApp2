@@ -10,3 +10,9 @@ object Productos
 
 @Serializable
 object Registro
+
+@Serializable
+data class ProductoDetalle(val productoSku: String)
+
+@Serializable
+object Carrito
