@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.room.ktx)
 
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
