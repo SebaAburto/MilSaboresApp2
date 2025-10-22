@@ -43,8 +43,6 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
     val estado by viewModel.estado.collectAsState()
     var mostrarCheck by remember { mutableStateOf(false) }
 
-
-
     Column(
         Modifier
             .fillMaxSize()
@@ -143,10 +141,11 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
         }
 
         AnimatedVisibility(
-            visible = mostrarCheck,
-            enter = scaleIn() + fadeIn(),
-            exit = scaleOut() + fadeOut()
+            visible = mostrarCheck, // Condicion para que sea visible
+            enter = scaleIn() + fadeIn(), // Animacion de entrada
+            exit = scaleOut() + fadeOut() // Animaciond de salida
         ) {
+            // que es lo que se va a animar
             Text(
                 "✔ Cuenta creada con éxito",
                 color = Color(0xFF388E3C),
