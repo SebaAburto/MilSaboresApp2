@@ -1,5 +1,10 @@
 package com.example.milsaboresapp.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import com.example.milsaboresapp.viewmodel.LoginViewModel
 
 import androidx.compose.foundation.background
@@ -16,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +36,7 @@ import com.example.milsaboresapp.ui.theme.ColorLight
 @Composable
 fun LoginScreen(navController: NavController? = null , viewModel: LoginViewModel = viewModel()) {
     val estado by viewModel.estado.collectAsState()
+    var mostrarCheck by remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -75,6 +84,7 @@ fun LoginScreen(navController: NavController? = null , viewModel: LoginViewModel
         Button(
             onClick = {
                 if (viewModel.validarLogin()) {
+                    mostrarCheck = true
                 }
             },
             modifier = Modifier
@@ -83,6 +93,21 @@ fun LoginScreen(navController: NavController? = null , viewModel: LoginViewModel
 
             ) {
             Text("Iniciar Sesion")
+        }
+        AnimatedVisibility(
+            visible = mostrarCheck, // Condicion para que sea visible
+            enter = scaleIn() + fadeIn(), // Animacion de entrada
+            exit = scaleOut() + fadeOut() // Animaciond de salida
+        ) {
+            // que es lo que se va a animar
+            Text(
+                "✔ Inicio de sesión exitoso. Bienvenido!",
+                color = Color(0xFF388E3C),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
         }
     }
 }
