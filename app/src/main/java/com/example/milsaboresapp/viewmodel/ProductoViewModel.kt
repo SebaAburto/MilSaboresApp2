@@ -22,6 +22,7 @@ class ProductViewModel(
     // Flujo que escucha los cambios en 'categoriaSeleccionada' y trae la lista de productos filtrada
     val productos: StateFlow<List<Producto>> = _categoriaSeleccionada
         .mapLatest { categoria ->
+
             repository.getProductosPorCategoria(categoria)
         }
         .stateIn(

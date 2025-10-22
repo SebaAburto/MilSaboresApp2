@@ -31,7 +31,7 @@ import com.example.milsaboresapp.ui.theme.ColorLight
 import com.example.milsaboresapp.viewmodel.FormularioViewModel
 
 @Composable
-fun FormularioScreen(navController: NavController ? = null , viewModel: FormularioViewModel = FormularioViewModel()) {
+fun FormularioScreen(navController: NavController? = null , viewModel: FormularioViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val estado by viewModel.estado.collectAsState()
 
 
