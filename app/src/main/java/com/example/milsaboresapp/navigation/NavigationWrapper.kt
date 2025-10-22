@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.milsaboresapp.ui.components.AppTopBar
 import com.example.milsaboresapp.ui.components.DrawerMenu
 import com.example.milsaboresapp.ui.screens.FormularioScreen
+import com.example.milsaboresapp.ui.screens.LoginScreen
 import com.example.milsaboresapp.ui.screens.HomeScreen
 import com.example.milsaboresapp.ui.screens.ProductosScreen
 import com.example.milsaboresapp.ui.screens.CarritoScreen
@@ -41,6 +42,10 @@ fun NavigationWrapper() {
                 },
                 onNavigateToRegistro = {
                     navController.navigate("registro")
+                    scope.launch { drawerState.close() }
+                },
+                onNavigateToLogin = {
+                    navController.navigate("login")
                     scope.launch { drawerState.close() }
                 }
             )
@@ -78,6 +83,9 @@ fun NavigationWrapper() {
                 }
                 composable("registro") {
                     FormularioScreen()
+                }
+                composable("login") {
+                    LoginScreen()
                 }
                 composable("carrito") {
                     CarritoScreen()
