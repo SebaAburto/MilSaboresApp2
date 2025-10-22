@@ -1,5 +1,10 @@
 package com.example.milsaboresapp.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +24,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,8 +39,9 @@ import com.example.milsaboresapp.ui.theme.ColorLight
 import com.example.milsaboresapp.viewmodel.FormularioViewModel
 
 @Composable
-fun FormularioScreen(navController: NavController? = null , viewModel: FormularioViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun FormularioScreen(navController: NavController? = null , viewModel: FormularioViewModel = viewModel()) {
     val estado by viewModel.estado.collectAsState()
+    var mostrarCheck by remember { mutableStateOf(false) }
 
 
 
@@ -111,10 +120,7 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
                 onCheckedChange = viewModel::onAceptarTerminosChange,
                 colors = CheckboxDefaults.colors(
                     checkedColor = MaterialTheme.colorScheme.primary,
-
                     uncheckedColor = Color.Gray,
-
-                    // (Opcional) Color de la marca de verificación (check)
                     checkmarkColor = Color.White
                 )
             )
@@ -124,16 +130,32 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
         Button(
             onClick = {
                 if (viewModel.validarFormulario()) {
+                    mostrarCheck = true
                 }
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            enabled = estado.aceptaTerminos // solo se habilita si acepta
+            enabled = estado.aceptaTerminos,
+
         ) {
             Text("Crear cuenta")
         }
 
+        AnimatedVisibility(
+            visible = mostrarCheck,
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut()
+        ) {
+            Text(
+                "✔ Cuenta creada con éxito",
+                color = Color(0xFF388E3C),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        }
     }
 }
 
@@ -153,6 +175,5 @@ fun ResumenScreen(viewModel: FormularioViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun FormularioPreview() {
-    // NO use viewModel() aquí — crea una instancia directa del ViewModel para el preview
     FormularioScreen ()
 }
