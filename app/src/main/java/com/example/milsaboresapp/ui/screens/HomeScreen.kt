@@ -16,9 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.milsaboresapp.R
-import com.example.milsaboresapp.data.remote.ProductosSource
+import com.example.milsaboresapp.data.local.ProductosSource
 import com.example.milsaboresapp.ui.components.ProductCard
-import com.example.milsaboresapp.ui.theme.ColorLight
 import com.example.milsaboresapp.model.Producto
 
 
@@ -31,7 +30,7 @@ fun HomeScreen(navigateToProductos: () -> Unit, onNavigateToProductDetail: (Prod
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ColorLight)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {

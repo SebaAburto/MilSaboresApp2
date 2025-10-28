@@ -1,6 +1,6 @@
 package com.example.milsaboresapp.repository
 
-import com.example.milsaboresapp.data.remote.ProductosSource
+import com.example.milsaboresapp.data.local.ProductosSource
 import com.example.milsaboresapp.model.Producto
 
 // 🚨 La interfaz solo debe contener las firmas de los métodos.

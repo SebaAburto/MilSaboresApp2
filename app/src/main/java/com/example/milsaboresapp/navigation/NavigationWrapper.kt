@@ -17,6 +17,7 @@ import com.example.milsaboresapp.ui.screens.HomeScreen
 import com.example.milsaboresapp.ui.screens.ProductosScreen
 import com.example.milsaboresapp.ui.screens.CarritoScreen
 import com.example.milsaboresapp.ui.screens.ProductoDetalleScreen
+import com.example.milsaboresapp.ui.screens.ConfiguracionScreen
 import kotlinx.coroutines.launch
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -42,6 +43,10 @@ fun NavigationWrapper() {
                 },
                 onNavigateToRegistro = {
                     navController.navigate("registro")
+                    scope.launch { drawerState.close() }
+                },
+                onNavigateToConfiguracion = {
+                    navController.navigate("configuracion")
                     scope.launch { drawerState.close() }
                 },
                 onNavigateToLogin = {
@@ -89,6 +94,10 @@ fun NavigationWrapper() {
                 }
                 composable("carrito") {
                     CarritoScreen()
+                }
+
+                composable("configuracion") {
+                    ConfiguracionScreen()
                 }
 
                 composable(

@@ -1,4 +1,4 @@
-package com.example.milsaboresapp.data.remote
+package com.example.milsaboresapp.data.local
 
 import com.example.milsaboresapp.model.Producto
 
