@@ -17,6 +17,7 @@ fun DrawerMenu(
     onNavigateToConfiguracion: () -> Unit,
     onNavigateToRegistro: () -> Unit,
     onNavigateToLogin: () -> Unit,
+    onNavigateToNosotros: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -42,6 +43,10 @@ fun DrawerMenu(
 
         TextButton(onClick = onNavigateToProductos) {
             Text("Productos", color = ColorText)
+        }
+        Spacer(Modifier.height(12.dp))
+        TextButton(onClick = onNavigateToNosotros) {
+            Text("Nosotros", color = ColorText)
         }
         Spacer(Modifier.height(12.dp))
 

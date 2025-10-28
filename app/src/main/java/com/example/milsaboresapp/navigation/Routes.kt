@@ -12,6 +12,9 @@ object Productos
 object Registro
 
 @Serializable
+object Nosotros
+
+@Serializable
 data class ProductoDetalle(val productoSku: String)
 
 @Serializable
