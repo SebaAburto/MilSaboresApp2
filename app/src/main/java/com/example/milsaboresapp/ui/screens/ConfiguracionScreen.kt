@@ -54,7 +54,7 @@ fun ConfiguracionScreen(viewModel: ConfiguracionViewModel = viewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Modo Oscuro Persistente",
+                "Modo Oscuro",
                 style = MaterialTheme.typography.headlineMedium,
                 color = textoColor
             )

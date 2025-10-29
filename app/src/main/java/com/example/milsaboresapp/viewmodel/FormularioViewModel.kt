@@ -6,7 +6,7 @@ import com.example.milsaboresapp.model.UsuarioErrores
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-
+import android.net.Uri
 class FormularioViewModel: ViewModel() {
     private val _estado = MutableStateFlow(Formulario())
     val estado: StateFlow<Formulario> = _estado
@@ -28,6 +28,11 @@ class FormularioViewModel: ViewModel() {
     }
     fun onRepetirClaveChange(valor: String) {
         _estado.value = _estado.value.copy(repetirClave = valor)
+    }
+    fun onFotoPerfilUriChange(uri: Uri?) {
+        _estado.update {
+            it.copy(fotoPerfilUri = uri)
+        }
     }
     fun validarFormulario(): Boolean {
         val estadoActual = _estado.value

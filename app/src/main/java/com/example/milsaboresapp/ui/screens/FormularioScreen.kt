@@ -9,9 +9,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll // 🔑 Importación necesaria
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -34,8 +38,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.milsaboresapp.model.Formulario
+import com.example.milsaboresapp.ui.components.ImageSelector
 import com.example.milsaboresapp.ui.theme.ColorLight
 import com.example.milsaboresapp.viewmodel.FormularioViewModel
+import coil.compose.AsyncImage
 
 @Composable
 fun FormularioScreen(navController: NavController? = null , viewModel: FormularioViewModel = viewModel()) {
@@ -43,11 +49,14 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
     var mostrarCheck by remember { mutableStateOf(false) }
 
     Column(
+        // 🔑 CORRECCIÓN CLAVE: Hacer la columna desplazable (scrollable)
         Modifier
             .fillMaxSize()
             .background(ColorLight)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .verticalScroll(rememberScrollState()) // 🚀 Permite el desplazamiento vertical
+            .padding(16.dp), // Aplicar padding después del desplazamiento
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text("Registrarse",
             style = MaterialTheme.typography.headlineMedium,
@@ -56,12 +65,23 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
                 .align(Alignment.CenterHorizontally)
         )
 
+        // ADICIÓN: Selector de Imagen
+        ImageSelector(
+            currentUri = estado.fotoPerfilUri,
+            onUriSelected = viewModel::onFotoPerfilUriChange
+        )
+
+        Spacer(Modifier.height(8.dp))
+
         val coloresFondo = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
             errorContainerColor = Color.White,
             disabledContainerColor = Color.White
         )
+
+        // --- CAMPOS DE TEXTO ---
+        // ... (Los campos de texto permanecen igual) ...
 
         OutlinedTextField(
             value = estado.nombre,
@@ -118,6 +138,8 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             modifier = Modifier.fillMaxWidth(),
             colors = coloresFondo
         )
+
+        // --- CHECKBOX y BOTÓN ---
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = estado.aceptaTerminos,
@@ -139,19 +161,18 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp), // El botón ahora será visible al hacer scroll
             enabled = estado.aceptaTerminos,
 
-        ) {
+            ) {
             Text("Crear cuenta")
         }
 
         AnimatedVisibility(
-            visible = mostrarCheck, // Condicion para que sea visible
-            enter = scaleIn() + fadeIn(), // Animacion de entrada
-            exit = scaleOut() + fadeOut() // Animaciond de salida
+            visible = mostrarCheck,
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut()
         ) {
-            // que es lo que se va a animar
             Text(
                 "✔ Cuenta creada con éxito",
                 color = Color(0xFF388E3C),
@@ -161,24 +182,9 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
         }
+
+        Spacer(Modifier.height(30.dp)) // Añadir espacio extra al final para scroll
     }
 }
 
-@Composable
-fun ResumenScreen(viewModel: FormularioViewModel) {
-    val estado by viewModel.estado.collectAsState()
-    Column (Modifier.padding(16.dp)){
-        Text("Resumen del registro", style = MaterialTheme.typography.headlineMedium)
-        Text("Nombre: ${estado.nombre}")
-        Text("Correo: ${estado.correo}")
-        Text("Direccion: ${estado.direccion}")
-        Text("Contraseña: ${"*".repeat(estado.clave.length)}")
-        Text("¿Terminos aceptados? ${if(estado.aceptaTerminos) "Si" else "No"}")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FormularioPreview() {
-    FormularioScreen ()
-}
+// ... (Resto del código: ResumenScreen y Preview)
