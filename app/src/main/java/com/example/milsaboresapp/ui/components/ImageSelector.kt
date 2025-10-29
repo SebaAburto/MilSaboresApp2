@@ -28,7 +28,7 @@ import com.example.milsaboresapp.util.createImageUri // Asegúrate de que esta u
 @Composable
 fun ImageSelector(
     currentUri: Uri?,
-    onUriSelected: (Uri?) -> Unit // Callback para enviar la URI al ViewModel
+    onUriSelected: (Uri?) -> Unit // Para enviar la URI al ViewModel
 ) {
     val context = LocalContext.current
     // Estado temporal para la URI de la cámara.

@@ -49,12 +49,12 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
     var mostrarCheck by remember { mutableStateOf(false) }
 
     Column(
-        // 🔑 CORRECCIÓN CLAVE: Hacer la columna desplazable (scrollable)
+
         Modifier
             .fillMaxSize()
             .background(ColorLight)
-            .verticalScroll(rememberScrollState()) // 🚀 Permite el desplazamiento vertical
-            .padding(16.dp), // Aplicar padding después del desplazamiento
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ){

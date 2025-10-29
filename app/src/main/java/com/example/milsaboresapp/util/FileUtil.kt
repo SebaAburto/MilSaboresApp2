@@ -20,7 +20,7 @@ fun createImageUri(context: Context): Uri {
     // Retorna la URI del FileProvider
     return FileProvider.getUriForFile(
         context,
-        "${context.packageName}.fileprovider", // Debe coincidir con el 'authorities' del Manifest
+        "${context.packageName}.fileprovider",
         tempFile
     )
 }

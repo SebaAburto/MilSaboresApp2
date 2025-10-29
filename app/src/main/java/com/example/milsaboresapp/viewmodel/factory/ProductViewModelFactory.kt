@@ -14,10 +14,11 @@ class ProductViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        //verifica que sea la clase correcta
         if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
-
+            //crea la instancia viewmodel inyectando dependencia
             return ProductViewModel(repository) as T
-        }
+        } //en caso de error, notifica.
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

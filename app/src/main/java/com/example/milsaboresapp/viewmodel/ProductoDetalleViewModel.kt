@@ -11,20 +11,20 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.example.milsaboresapp.model.Producto // Asegúrate de tener esta importación
 
-/**
- * Data class que representa el estado de la UI para la pantalla de detalle.
- * Está consolidada aquí.
- */
+
+//Data class que representa el estado de la UI para la pantalla de detalle.
+//Está consolidada aquí.
+
 data class ProductoDetalleUiState(
     val producto: Producto? = null,
     val isLoading: Boolean = true,
     val error: String? = null
 )
 
-/**
- * VIEWMODEL: Contiene la lógica para cargar un producto, gestionar su cantidad
- * y añadirlo al carrito.
- */
+
+//VIEWMODEL: Contiene la lógica para cargar un producto, gestionar su cantidad
+//y añadirlo al carrito.
+
 class ProductoDetalleViewModel(
     private val sku: String,
     private val productosRepo: ProductRepository,
@@ -59,7 +59,6 @@ class ProductoDetalleViewModel(
             }
         }
     } //isLoading se usa en caso de que se llame al repositorio y no se ha recibido respuesta.
-
     // Control de Cantidad
 
     fun incrementarCantidad() {
