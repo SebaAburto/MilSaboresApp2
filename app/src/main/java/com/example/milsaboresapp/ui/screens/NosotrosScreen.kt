@@ -153,7 +153,7 @@ fun NosotrosScreen() {
                 lineHeight = 22.sp,
                 modifier = Modifier.clickable {
                     val intent = Intent(Intent.ACTION_DIAL)
-                    intent.data = Uri.parse("tel:+56912345678") // número en formato internacional
+                    intent.data = Uri.parse("tel:+56912345678")
                     context.startActivity(intent)
                 }
             )
