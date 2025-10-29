@@ -17,18 +17,18 @@ class ConfiguracionDataStore(private val context: Context) {
     // Clave para guardar el valor booleano
     private val MODO_OSCURO = booleanPreferencesKey("modo_oscuro_activado")
 
-    /**
-     * Guarda el estado booleano de la preferencia.
-     */
+    
+    // Guarda el estado booleano de la preferencia.
+    
     suspend fun guardarModoOscuro(valor: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[MODO_OSCURO] = valor
         }
     }
 
-    /**
-     * Expone un Flow que emite el estado actual del modo oscuro.
-     */
+    
+    //Expone un Flow que emite el estado actual del modo oscuro.
+    
     fun obtenerModoOscuro(): Flow<Boolean?> =
         context.dataStore.data.map { prefs ->
             prefs[MODO_OSCURO]
