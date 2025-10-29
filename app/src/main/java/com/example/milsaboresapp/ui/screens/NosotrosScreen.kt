@@ -1,7 +1,6 @@
 package com.example.milsaboresapp.ui.screens
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,12 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.milsaboresapp.R
 import com.example.milsaboresapp.ui.theme.ColorLight
 
 @Composable
@@ -136,9 +133,9 @@ fun NosotrosScreen() {
             fontSize = 18.sp,
             lineHeight = 22.sp,
             modifier = Modifier.clickable {
-                // Intent para abrir Google Maps
+                // Objeto Intent para abrir Google Maps
                 val gmmIntentUri =
-                    Uri.parse("geo:0,0?q=Álvarez 2366, Chorrillos, Viña del Mar, Chile")
+                    Uri.parse("geo:0,0?q=Álvarez 2366, Chorrillos, Viña del Mar, Chile") //URI (Uniform Resource Identifier), es el identificador de la accion
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 mapIntent.setPackage("com.google.android.apps.maps")
                 context.startActivity(mapIntent)
