@@ -35,7 +35,7 @@ class ProductRepositoryImpl : ProductRepository {
         }
     }
 
-    // 2. FUNCIÓN DE CATEGORÍAS (Implementación)
+    // FUNCIÓN DE CATEGORÍAS (Implementación)
     override fun getCategorias(): List<String> {
         // Obtiene todas las categorías únicas del Source.
         val categoriasUnicas = productosData

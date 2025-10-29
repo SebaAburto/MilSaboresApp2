@@ -65,7 +65,7 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
                 .align(Alignment.CenterHorizontally)
         )
 
-        // ADICIÓN: Selector de Imagen
+        //Selector de Imagen
         ImageSelector(
             currentUri = estado.fotoPerfilUri,
             onUriSelected = viewModel::onFotoPerfilUriChange
@@ -81,7 +81,6 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
         )
 
         // --- CAMPOS DE TEXTO ---
-        // ... (Los campos de texto permanecen igual) ...
 
         OutlinedTextField(
             value = estado.nombre,

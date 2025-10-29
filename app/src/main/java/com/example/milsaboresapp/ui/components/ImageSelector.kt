@@ -44,14 +44,14 @@ fun ImageSelector(
 
     // --- LANZADORES DE ACTIVIDAD ---
 
-    // 1. LANZADOR DE GALERÍA
+    // LANZADOR DE GALERÍA
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { resultUri: Uri? ->
         onUriSelected(resultUri)
     }
 
-    // 2. LANZADOR DE CÁMARA
+    // LANZADOR DE CÁMARA
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success: Boolean ->
@@ -62,12 +62,12 @@ fun ImageSelector(
         }
     }
 
-    // 3. LANZADOR DE PERMISOS (CÁMARA y GALERÍA)
+    // LANZADOR DE PERMISOS (CÁMARA y GALERÍA)
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            // 🔑 SOLUCIÓN AL ERROR: Creamos una copia local inmutable
+
             val currentTempUri = tempImageUri
 
             // Usamos la copia local para el Smart Cast
@@ -118,7 +118,7 @@ fun ImageSelector(
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
-                    // Preparamos la URI temporal y solicitamos permiso de CÁMARA
+                    // Prepara la URI temporal y solicitamos permiso de CÁMARA
                     tempImageUri = createImageUri(context)
                     permissionLauncher.launch(Manifest.permission.CAMERA)
                 }) {
@@ -129,7 +129,7 @@ fun ImageSelector(
                 TextButton(onClick = {
                     showDialog = false
                     tempImageUri = null
-                    // Verificamos si ya tenemos el permiso de Galería/Almacenamiento
+                    // se verifica si ya tenemos el permiso de Galería/Almacenamiento
                     if (ContextCompat.checkSelfPermission(context, storagePermission) == PackageManager.PERMISSION_GRANTED) {
                         galleryLauncher.launch("image/*")
                     } else {
