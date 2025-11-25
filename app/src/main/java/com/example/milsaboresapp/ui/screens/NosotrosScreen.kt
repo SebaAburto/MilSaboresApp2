@@ -5,22 +5,35 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.milsaboresapp.ui.theme.ColorLight
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun NosotrosScreen() {
     val context = LocalContext.current
+    // Coordenadas aproximadas de Álvarez 2366, Viña del Mar (Ajustar si es necesario)
+    val localizacionTienda = LatLng(-33.03332039729435, -71.53317337470516)
+    // Estado inicial de la cámara del mapa (Zoom 15f es nivel calle)
+    val cameraPositionState = rememberCameraPositionState { position = CameraPosition.fromLatLngZoom(localizacionTienda, 15f)}
+
 
     Column(
         modifier = Modifier
@@ -127,22 +140,14 @@ fun NosotrosScreen() {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
+
             Text(
-                    text = "📍 Dirección: Álvarez 2366, Chorrillos, Viña del Mar, Chile",
-            style = MaterialTheme.typography.bodyMedium,
-            fontSize = 18.sp,
-            lineHeight = 22.sp,
-            modifier = Modifier.clickable {
-                // Objeto Intent para abrir Google Maps
-                val gmmIntentUri =
-                    Uri.parse("geo:0,0?q=Álvarez 2366, Chorrillos, Viña del Mar, Chile") //URI (Uniform Resource Identifier), es el identificador de la accion
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                mapIntent.setPackage("com.google.android.apps.maps")
-                context.startActivity(mapIntent)
-            }
+                text = "✉️ Correo: contacto@1000sabores.cl",
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 18.sp,
+                lineHeight = 22.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
-
             Text(
                 text = "📞 Teléfono: +56 9 1234 5678",
                 style = MaterialTheme.typography.bodyMedium,
@@ -156,11 +161,31 @@ fun NosotrosScreen() {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "✉️ Correo: contacto@1000sabores.cl",
-                style = MaterialTheme.typography.bodyMedium,
-                fontSize = 18.sp,
-                lineHeight = 22.sp
+                text = "📍 Ubicación: Álvarez 2366, Chorrillos",
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                fontSize = 18.sp
             )
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            ) {
+                GoogleMap(
+                    modifier = Modifier.fillMaxSize(),
+                    cameraPositionState = cameraPositionState
+                ) {
+                    // Marcador rojo estándar en la ubicación
+                    Marker(
+                        state = MarkerState(position = localizacionTienda),
+                        title = "1000 Sabores",
+                        snippet = "Ven a visitarnos!"
+                    )
+                }
+            }
+
         }
         Spacer(modifier = Modifier.height(16.dp))
 
