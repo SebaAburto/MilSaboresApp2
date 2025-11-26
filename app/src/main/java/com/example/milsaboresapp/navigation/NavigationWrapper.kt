@@ -116,17 +116,7 @@ fun NavigationWrapper() {
                 }
 
                 composable("AdminProductosScreen") {
-                    val productViewModel: ProductViewModel = viewModel()
-
-                    AdminProductosScreen(
-                        viewModel = productViewModel, // Parámetro 1: El ViewModel
-                        onAgregarClick = { // Parámetro 2: Navegación para Agregar
-                            navController.navigate("AgregarProductoScreen") // Asume que tienes esta ruta
-                        },
-                        onEditarClick = { producto -> // Parámetro 3: Navegación para Editar
-                            navController.navigate("EditarProductoScreen/${producto.sku}") // Asume que tienes esta ruta
-                        }
-                    )
+                    AdminProductosScreen()
                 }
 
                 composable(
