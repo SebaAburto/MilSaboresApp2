@@ -18,7 +18,7 @@ import com.example.milsaboresapp.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductosAdminScreen(
+fun AdminProductosScreen(
     viewModel: ProductViewModel,
     onAgregarClick: () -> Unit,
     onEditarClick: (Producto) -> Unit

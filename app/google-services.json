@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "375235385542",
+    "project_id": "fir-pmsdb",
+    "storage_bucket": "fir-pmsdb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375235385542:android:fe1eda326d8f42b4cb9fc7",
+        "android_client_info": {
+          "package_name": "com.example.milsaboresapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ8CjVz_bXcj1lBuoofjnUbDjPaBppNg8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
-import com.example.milsaboresapp.util.createImageUri // Asegúrate de que esta utilidad esté creada
+import com.example.milsaboresapp.util.createImageUri
 
 @Composable
 fun ImageSelector(

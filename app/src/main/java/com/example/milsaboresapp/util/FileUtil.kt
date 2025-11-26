@@ -6,7 +6,7 @@ import androidx.core.content.FileProvider
 import java.io.File
 
 
-//FileUtil crea una URI temporal y única usando FileProvider para que la cámara guarde la foto.
+//FileUtil: utiliza FileProvider para generar un URI de la imagen, conformado por el prefijo y sufijo.
 
 fun createImageUri(context: Context): Uri {
     val tempFile = File.createTempFile(

@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,9 +20,11 @@ import com.example.milsaboresapp.ui.screens.CarritoScreen
 import com.example.milsaboresapp.ui.screens.ProductoDetalleScreen
 import com.example.milsaboresapp.ui.screens.ConfiguracionScreen
 import com.example.milsaboresapp.ui.screens.NosotrosScreen
+import com.example.milsaboresapp.ui.screens.AdminProductosScreen
 import kotlinx.coroutines.launch
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.milsaboresapp.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +59,10 @@ fun NavigationWrapper() {
                 },
                 onNavigateToNosotros = {
                     navController.navigate("nosotros")
+                    scope.launch { drawerState.close() }
+                },
+                onNavigateToAdminProductosScreen = {
+                    navController.navigate("AdminProductosScreen")
                     scope.launch { drawerState.close() }
                 },
             )
@@ -106,6 +113,20 @@ fun NavigationWrapper() {
                 }
                 composable("nosotros") {
                     NosotrosScreen()
+                }
+
+                composable("AdminProductosScreen") {
+                    val productViewModel: ProductViewModel = viewModel()
+
+                    AdminProductosScreen(
+                        viewModel = productViewModel, // Parámetro 1: El ViewModel
+                        onAgregarClick = { // Parámetro 2: Navegación para Agregar
+                            navController.navigate("AgregarProductoScreen") // Asume que tienes esta ruta
+                        },
+                        onEditarClick = { producto -> // Parámetro 3: Navegación para Editar
+                            navController.navigate("EditarProductoScreen/${producto.sku}") // Asume que tienes esta ruta
+                        }
+                    )
                 }
 
                 composable(

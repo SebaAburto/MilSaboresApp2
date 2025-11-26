@@ -18,6 +18,7 @@ fun DrawerMenu(
     onNavigateToRegistro: () -> Unit,
     onNavigateToLogin: () -> Unit,
     onNavigateToNosotros: () -> Unit,
+    onNavigateToAdminProductosScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -62,6 +63,9 @@ fun DrawerMenu(
         }
         TextButton(onClick = onNavigateToLogin) {
             Text("Iniciar Sesion", color = ColorText)
+        }
+        TextButton(onClick = onNavigateToAdminProductosScreen) {
+            Text("Inventario", color = ColorText)
         }
 }
     }
