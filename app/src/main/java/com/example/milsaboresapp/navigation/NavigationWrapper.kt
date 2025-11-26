@@ -116,7 +116,11 @@ fun NavigationWrapper() {
                 }
 
                 composable("AdminProductosScreen") {
-                    AdminProductosScreen()
+                    val productViewModel: ProductViewModel = viewModel()
+
+                    AdminProductosScreen(
+                        viewModel = productViewModel
+                    )
                 }
 
                 composable(

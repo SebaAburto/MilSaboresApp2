@@ -4,12 +4,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.milsaboresapp.model.Producto
 import com.example.milsaboresapp.viewmodel.ProductViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminProductosScreen() {
+fun AdminProductosScreen(viewModel: ProductViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
