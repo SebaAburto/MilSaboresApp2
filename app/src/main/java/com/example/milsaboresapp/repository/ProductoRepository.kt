@@ -1,81 +1,96 @@
 package com.example.milsaboresapp.repository
 
-import com.example.milsaboresapp.data.local.ProductosSource
 import com.example.milsaboresapp.model.Producto
+import com.example.milsaboresapp.network.RetrofitClient
 
-
+// 1. LA INTERFAZ
 interface ProductRepository {
+    suspend fun obtenerProductoPorSku(sku: String): Producto?
+    suspend fun getProductos(): List<Producto>
+    suspend fun getProductosPorCategoria(categoria: String): List<Producto>
+    suspend fun getCategorias(): List<String>
 
-    // Necesario para la pantalla de detalle
-    fun obtenerProductoPorSku(sku: String): Producto?
+    // --- ESTA ES LA QUE FALTABA ---
+    suspend fun getProductoPorId(id: String): Producto?
+    // -----------------------------
 
-    // Obtiene todos los productos (o por categoría)
-    fun getProductosPorCategoria(categoria: String): List<Producto>
-
-    // Genera la lista de categorías para los filtros.
-    fun getCategorias(): List<String>
-
-    // --- 🎯 OPERACIONES CRUD AÑADIDAS ---
-    fun addProducto(producto: Producto)
-    fun updateProducto(producto: Producto)
-    fun deleteProducto(sku: String)
+    suspend fun addProducto(producto: Producto)
+    suspend fun updateProducto(producto: Producto)
+    suspend fun deleteProducto(producto: Producto)
 }
 
+// 2. LA IMPLEMENTACIÓN
 class ProductRepositoryImpl : ProductRepository {
 
-    // CAMBIO CLAVE 1: Usamos una lista mutable para simular la persistencia
-    private val productosData: MutableList<Producto> = ProductosSource.productos.toMutableList()
+    private val api = RetrofitClient.instance
 
-    override fun obtenerProductoPorSku(sku: String): Producto? {
-        return productosData.find { it.sku == sku }
-    }
-
-    override fun getProductosPorCategoria(categoria: String): List<Producto> {
-
-        if (categoria.equals("todos", ignoreCase = true)) {
-            // Devolvemos una copia inmutable para evitar modificaciones externas
-            return productosData.toList()
-        }
-
-        // Filtra por la categoría real.
-        return productosData.filter {
-            it.categoria.equals(categoria, ignoreCase = true)
+    override suspend fun getProductos(): List<Producto> {
+        return try {
+            api.listarProductos()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
         }
     }
 
-    // FUNCIÓN DE CATEGORÍAS (Implementación)
-    override fun getCategorias(): List<String> {
-        // Obtiene todas las categorías únicas del Source.
-        val categoriasUnicas = productosData
-            .map { it.categoria }
-            .distinct()
-            .toMutableList()
+    // --- IMPLEMENTACIÓN DE LA FUNCIÓN FALTANTE ---
+    override suspend fun getProductoPorId(id: String): Producto? {
+        return try {
+            // Llama al endpoint @GET("api/productos/{id}")
+            api.obtenerProducto(id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+    // ---------------------------------------------
 
-        // Inserta la opción "todos" al principio.
-        categoriasUnicas.add(0, "todos")
-        return categoriasUnicas
+    override suspend fun obtenerProductoPorSku(sku: String): Producto? {
+        // Como tu backend busca por ID, para buscar por SKU
+        // traemos la lista y filtramos (o podrías crear un endpoint específico en Spring)
+        val lista = getProductos()
+        return lista.find { it.sku == sku }
     }
 
-    // --- 🎯 IMPLEMENTACIÓN DE OPERACIONES CRUD ---
-
-    // CREATE (C): Añade un nuevo producto a la lista mutable.
-    override fun addProducto(producto: Producto) {
-        // En una app real, aquí se llamaría a la base de datos (ej: RoomDao.insert(producto))
-        productosData.add(producto)
+    override suspend fun getProductosPorCategoria(categoria: String): List<Producto> {
+        val lista = getProductos()
+        if (categoria.equals("todos", ignoreCase = true)) return lista
+        return lista.filter { it.categoria.equals(categoria, ignoreCase = true) }
     }
 
-    // UPDATE (U): Busca y reemplaza el producto por su SKU.
-    override fun updateProducto(producto: Producto) {
-        val index = productosData.indexOfFirst { it.sku == producto.sku }
-        if (index != -1) {
-            // En una app real, aquí se llamaría a la base de datos (ej: RoomDao.update(producto))
-            productosData[index] = producto
+    override suspend fun getCategorias(): List<String> {
+        val lista = getProductos()
+        val categorias = lista.mapNotNull { it.categoria }.distinct().toMutableList()
+        categorias.add(0, "todos")
+        return categorias
+    }
+
+    override suspend fun addProducto(producto: Producto) {
+        try {
+            api.guardarProducto(producto)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e // Re-lanzamos para que el ViewModel sepa que falló
         }
     }
 
-    // DELETE (D): Elimina un producto por su SKU.
-    override fun deleteProducto(sku: String) {
-        // En una app real, aquí se llamaría a la base de datos (ej: RoomDao.deleteBySku(sku))
-        productosData.removeIf { it.sku == sku }
+    override suspend fun updateProducto(producto: Producto) {
+        try {
+            val id = producto.id ?: throw Exception("ID nulo al editar")
+            api.editarProducto(id, producto)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    override suspend fun deleteProducto(producto: Producto) {
+        try {
+            val id = producto.id ?: throw Exception("ID nulo al eliminar")
+            api.eliminarProducto(id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
     }
 }
