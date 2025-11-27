@@ -14,10 +14,17 @@ interface ProductRepository {
 
     // Genera la lista de categorías para los filtros.
     fun getCategorias(): List<String>
+
+    // --- 🎯 OPERACIONES CRUD AÑADIDAS ---
+    fun addProducto(producto: Producto)
+    fun updateProducto(producto: Producto)
+    fun deleteProducto(sku: String)
 }
+
 class ProductRepositoryImpl : ProductRepository {
 
-    private val productosData: List<Producto> = ProductosSource.productos
+    // CAMBIO CLAVE 1: Usamos una lista mutable para simular la persistencia
+    private val productosData: MutableList<Producto> = ProductosSource.productos.toMutableList()
 
     override fun obtenerProductoPorSku(sku: String): Producto? {
         return productosData.find { it.sku == sku }
@@ -26,10 +33,11 @@ class ProductRepositoryImpl : ProductRepository {
     override fun getProductosPorCategoria(categoria: String): List<Producto> {
 
         if (categoria.equals("todos", ignoreCase = true)) {
-            return productosData // Usamos productosData que ya es la lista de ProductosSource
+            // Devolvemos una copia inmutable para evitar modificaciones externas
+            return productosData.toList()
         }
 
-        // Si no es "todos", filtra por la categoría real.
+        // Filtra por la categoría real.
         return productosData.filter {
             it.categoria.equals(categoria, ignoreCase = true)
         }
@@ -46,5 +54,28 @@ class ProductRepositoryImpl : ProductRepository {
         // Inserta la opción "todos" al principio.
         categoriasUnicas.add(0, "todos")
         return categoriasUnicas
+    }
+
+    // --- 🎯 IMPLEMENTACIÓN DE OPERACIONES CRUD ---
+
+    // CREATE (C): Añade un nuevo producto a la lista mutable.
+    override fun addProducto(producto: Producto) {
+        // En una app real, aquí se llamaría a la base de datos (ej: RoomDao.insert(producto))
+        productosData.add(producto)
+    }
+
+    // UPDATE (U): Busca y reemplaza el producto por su SKU.
+    override fun updateProducto(producto: Producto) {
+        val index = productosData.indexOfFirst { it.sku == producto.sku }
+        if (index != -1) {
+            // En una app real, aquí se llamaría a la base de datos (ej: RoomDao.update(producto))
+            productosData[index] = producto
+        }
+    }
+
+    // DELETE (D): Elimina un producto por su SKU.
+    override fun deleteProducto(sku: String) {
+        // En una app real, aquí se llamaría a la base de datos (ej: RoomDao.deleteBySku(sku))
+        productosData.removeIf { it.sku == sku }
     }
 }

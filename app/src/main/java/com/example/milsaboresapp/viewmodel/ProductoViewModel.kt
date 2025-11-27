@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
-    private val repository: ProductRepository
+    private val repository: ProductRepository // 👈 La Factory inyecta esto
 ) : ViewModel() {
 
     private val _categoriaSeleccionada = MutableStateFlow("todos")
@@ -39,5 +39,25 @@ class ProductViewModel(
 
     fun setCategoria(categoria: String) {
         _categoriaSeleccionada.value = categoria
+    }
+
+    // --- FUNCIONES CRUD ---
+
+    fun addProducto(producto: Producto) {
+        viewModelScope.launch {
+            repository.addProducto(producto)
+        }
+    }
+
+    fun updateProducto(producto: Producto) {
+        viewModelScope.launch {
+            repository.updateProducto(producto)
+        }
+    }
+
+    fun deleteProducto(producto: Producto) {
+        viewModelScope.launch {
+            repository.deleteProducto(producto.sku)
+        }
     }
 }

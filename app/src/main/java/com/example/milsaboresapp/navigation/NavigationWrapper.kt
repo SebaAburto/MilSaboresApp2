@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember // 👈 Importación clave
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -12,19 +13,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.milsaboresapp.ui.components.AppTopBar
 import com.example.milsaboresapp.ui.components.DrawerMenu
-import com.example.milsaboresapp.ui.screens.FormularioScreen
-import com.example.milsaboresapp.ui.screens.LoginScreen
-import com.example.milsaboresapp.ui.screens.HomeScreen
-import com.example.milsaboresapp.ui.screens.ProductosScreen
-import com.example.milsaboresapp.ui.screens.CarritoScreen
-import com.example.milsaboresapp.ui.screens.ProductoDetalleScreen
-import com.example.milsaboresapp.ui.screens.ConfiguracionScreen
-import com.example.milsaboresapp.ui.screens.NosotrosScreen
-import com.example.milsaboresapp.ui.screens.AdminProductosScreen
+import com.example.milsaboresapp.ui.screens.* // Importa todas las screens
+import com.example.milsaboresapp.repository.ProductRepositoryImpl // 👈 Implementación del Repositorio
+import com.example.milsaboresapp.viewmodel.factory.ProductViewModelFactory // 👈 Importación de la Factory
+import com.example.milsaboresapp.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.milsaboresapp.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,6 +27,14 @@ fun NavigationWrapper() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // --- 🎯 INICIALIZACIÓN DE DEPENDENCIAS ---
+    // Mantenemos el Repositorio y la Factory vivos durante el ciclo de vida del NavHost
+    val productRepository = remember { ProductRepositoryImpl() }
+    val productViewModelFactory = remember {
+        ProductViewModelFactory(productRepository)
+    }
+    // --- FIN DE INICIALIZACIÓN ---
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -116,10 +119,17 @@ fun NavigationWrapper() {
                 }
 
                 composable("AdminProductosScreen") {
-                    val productViewModel: ProductViewModel = viewModel()
-
+                    // La pantalla AdminProductosScreen llama internamente a viewModel()
+                    // Si el VM requiere Factory, se pasa la factory al Composable, NO a la pantalla.
                     AdminProductosScreen(
-                        viewModel = productViewModel
+                        // Se utiliza el argumento 'factory' para resolver la dependencia.
+                        viewModel = viewModel(factory = productViewModelFactory),
+                        onAgregarClick = {
+                            navController.navigate("AgregarProductoScreen") // Ruta a implementar
+                        },
+                        onEditarClick = { producto ->
+                            navController.navigate("EditarProductoScreen/${producto.sku}") // Ruta a implementar
+                        }
                     )
                 }
 

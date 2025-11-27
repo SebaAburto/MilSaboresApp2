@@ -228,6 +228,20 @@ object ProductosSource {
                         destacado = false,
                         enOferta = false,
                         stock = 10
+                ),
+                Producto(
+                        id = "P017",
+                        sku = "TEST1",
+                        nombre = "Torta TEST1",
+                        descripcion = "Elegante y deliciosa, diseñada para probar cualquier aplicacion",
+                        categoria = "test1",
+                        categoriaId = "C10",
+                        precio = 60000.0,
+                        precioEnOferta = 60000.0,
+                        imageUrl = "te002",
+                        destacado = true,
+                        enOferta = true,
+                        stock = 5
                 )
         )
 }
