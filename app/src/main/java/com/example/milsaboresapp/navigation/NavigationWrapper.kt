@@ -28,10 +28,11 @@ fun NavigationWrapper() {
     val scope = rememberCoroutineScope()
 
     // --- 🎯 INICIALIZACIÓN DE DEPENDENCIAS ---
-    // Instanciamos el repositorio que usa Retrofit
+
+    // 1. Repositorio (Sin argumentos ahora)
     val productRepository = remember { ProductRepositoryImpl() }
 
-    // Creamos la Factory para inyectar el repositorio en los ViewModels
+    // 2. Factory para el ViewModel
     val productViewModelFactory = remember {
         ProductViewModelFactory(productRepository)
     }
@@ -87,7 +88,7 @@ fun NavigationWrapper() {
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                // ... (Rutas existentes sin cambios: home, registro, login, etc.) ...
+                // ... (Rutas home, registro, login, etc. siguen igual) ...
                 composable("home") {
                     HomeScreen(
                         navigateToProductos = { navController.navigate("productos") },
@@ -109,62 +110,51 @@ fun NavigationWrapper() {
                 composable("configuracion") { ConfiguracionScreen() }
                 composable("nosotros") { NosotrosScreen() }
 
-                // --- 🛠️ RUTAS DE ADMINISTRACIÓN (CRUD) CORREGIDAS ---
+                // --- RUTAS CRUD ---
 
-                // 1. PANTALLA DE ADMIN (Lista)
+                // Lista Admin
                 composable("AdminProductosScreen") {
                     AdminProductosScreen(
-                        // Pasamos la factory para que el VM tenga el repositorio correcto
                         viewModel = viewModel(factory = productViewModelFactory),
-                        onAgregarClick = {
-                            navController.navigate("crearProducto")
-                        },
+                        onAgregarClick = { navController.navigate("crearProducto") },
                         onEditarClick = { producto ->
-                            // IMPORTANTE: Usamos el ID de Firebase para editar, no el SKU
-                            // Si el ID es nulo (por error), no navegamos
-                            producto.id?.let { id ->
-                                navController.navigate("editarProducto/$id")
-                            }
+                            producto.id?.let { id -> navController.navigate("editarProducto/$id") }
                         }
                     )
                 }
 
-                // 2. CREAR PRODUCTO (Usamos ProductoFormScreen)
+                // Crear
                 composable("crearProducto") {
                     ProductoFormScreen(
                         viewModel = viewModel(factory = productViewModelFactory),
-                        productoIdEditar = null, // Null indica que es NUEVO
+                        productoIdEditar = null,
                         onNavigateBack = { navController.popBackStack() }
                     )
                 }
 
-                // 3. EDITAR PRODUCTO (Usamos ProductoFormScreen)
-                // Cambiamos argumento de {sku} a {id} para coincidir con la API
+                // Editar
                 composable(
                     route = "editarProducto/{id}",
                     arguments = listOf(navArgument("id") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getString("id")
-
                     ProductoFormScreen(
                         viewModel = viewModel(factory = productViewModelFactory),
-                        productoIdEditar = id, // Pasamos el ID para cargar los datos
+                        productoIdEditar = id,
                         onNavigateBack = { navController.popBackStack() }
                     )
                 }
 
-                // 4. DETALLE DE PRODUCTO
+                // Detalle
                 composable(
                     route = "product_detail_route/{productoSku}",
                     arguments = listOf(navArgument("productoSku") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val productoSku = backStackEntry.arguments?.getString("productoSku")
-
                     if (productoSku != null) {
                         ProductoDetalleScreen(
                             navController = navController,
                             productoSku = productoSku
-                            // Si ProductoDetalleScreen necesita ViewModel, pásaselo aquí también con la factory
                         )
                     } else {
                         Text("Error: Producto no especificado")
