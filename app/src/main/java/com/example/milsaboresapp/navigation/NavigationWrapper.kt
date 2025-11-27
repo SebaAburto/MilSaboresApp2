@@ -68,6 +68,7 @@ fun NavigationWrapper() {
                     navController.navigate("AdminProductosScreen")
                     scope.launch { drawerState.close() }
                 },
+
             )
         }
     ) {
@@ -118,6 +119,22 @@ fun NavigationWrapper() {
                     NosotrosScreen()
                 }
 
+                composable("crearProducto") {
+                    CrearProductoScreen()
+                }
+                composable(
+                    route = "editarProducto/{sku}",
+                    arguments = listOf(navArgument("sku") { type = NavType.StringType })
+                ) { backStackEntry ->
+
+                    val sku = backStackEntry.arguments?.getString("sku") ?: ""
+
+                    UpdateProductScreen(
+                        sku = sku,
+                        navController = navController
+                    )
+                }
+
                 composable("AdminProductosScreen") {
                     // La pantalla AdminProductosScreen llama internamente a viewModel()
                     // Si el VM requiere Factory, se pasa la factory al Composable, NO a la pantalla.
@@ -125,10 +142,10 @@ fun NavigationWrapper() {
                         // Se utiliza el argumento 'factory' para resolver la dependencia.
                         viewModel = viewModel(factory = productViewModelFactory),
                         onAgregarClick = {
-                            navController.navigate("AgregarProductoScreen") // Ruta a implementar
+                            navController.navigate("crearProducto") // Ruta a implementar
                         },
                         onEditarClick = { producto ->
-                            navController.navigate("EditarProductoScreen/${producto.sku}") // Ruta a implementar
+                            navController.navigate("editarProducto/${producto.sku}") // Ruta a implementar
                         }
                     )
                 }

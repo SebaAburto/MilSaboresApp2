@@ -119,7 +119,7 @@ fun AdminProductosScreen(
                 }
             }
 
-            // --- LISTA DE PRODUCTOS (READ) ---
+            //LISTA DE PRODUCTOS
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(productos, key = { it.sku }) { producto ->
                     Card(
