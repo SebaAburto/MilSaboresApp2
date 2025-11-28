@@ -2,6 +2,7 @@ package com.example.milsaboresapp.data.local
 
 import com.example.milsaboresapp.model.Producto
 
+//ESTE ARCHIVO YA NO SE USA, ERA PARA LA LISTA DE PRODUCTOS LOCALES
 object ProductosSource {
 
         val productos = listOf(

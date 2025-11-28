@@ -1,12 +1,12 @@
 package com.example.milsaboresapp.viewmodel
 
-import android.content.Context // 👈 NECESARIO
-import android.net.Uri         // 👈 NECESARIO
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.milsaboresapp.model.Producto
 import com.example.milsaboresapp.repository.ProductRepository
-import com.example.milsaboresapp.util.ImageUtil // 👈 TU NUEVA UTILIDAD
+import com.example.milsaboresapp.util.ImageUtil
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -14,17 +14,17 @@ class ProductViewModel(
     private val repository: ProductRepository
 ) : ViewModel() {
 
-    // --- 1. ESTADOS PARA LA LISTA (FILTROS) ---
+    // ESTADOS PARA LA LISTA (FILTROS)
     private val _categoriaSeleccionada = MutableStateFlow("todos")
     val categoriaSeleccionada: StateFlow<String> = _categoriaSeleccionada
 
     private val _categorias = MutableStateFlow<List<String>>(emptyList())
     val categorias: StateFlow<List<String>> = _categorias
 
-    // Gatillo para recargar la lista manualmente después de un cambio
+    // Trigger para recargar la lista manualmente después de un cambio
     private val _reloadTrigger = MutableSharedFlow<Unit>(replay = 1).apply { tryEmit(Unit) }
 
-    // Combinamos la categoría + el gatillo para obtener la lista actualizada
+    // Combinar la categoría + el trigger para obtener la lista actualizada
     val productos: StateFlow<List<Producto>> = combine(_categoriaSeleccionada, _reloadTrigger) { categoria, _ ->
         if (categoria == "todos") {
             repository.getProductos()
@@ -37,17 +37,15 @@ class ProductViewModel(
         initialValue = emptyList()
     )
 
-    // --- 2. NUEVOS ESTADOS FALTANTES (Para el Formulario) ---
-
-    // ¿La operación (Guardar/Editar) terminó bien?
+    // verificar si las operaciones (guardar/editar) fueron exitosas.
     private val _operacionExitosa = MutableStateFlow(false)
     val operacionExitosa: StateFlow<Boolean> = _operacionExitosa
 
-    // El producto que descargamos para editar
+    // El producto obtenido para editar
     private val _productoObtenido = MutableStateFlow<Producto?>(null)
     val productoObtenido: StateFlow<Producto?> = _productoObtenido
 
-    // Mensajes de error para mostrar en Toast
+    // Mensajes de error para mostrar en Toast (pequeña alerta de android)
     private val _mensajeError = MutableStateFlow<String?>(null)
     val mensajeError: StateFlow<String?> = _mensajeError
 
@@ -72,7 +70,7 @@ class ProductViewModel(
         _mensajeError.value = null
     }
 
-    // --- 3. FUNCIONES CRUD ---
+    // FUNCIONES CRUD
 
     fun obtenerProductoPorId(id: String) {
         viewModelScope.launch {
@@ -85,7 +83,7 @@ class ProductViewModel(
         }
     }
 
-    // Funciones básicas (usadas internamente o para operaciones sin foto nueva)
+    // Funciones básicas (inutilizadas con la nueva version de agregar con foto)
     fun addProducto(producto: Producto) {
         viewModelScope.launch {
             try {
@@ -124,18 +122,18 @@ class ProductViewModel(
         }
     }
 
-    // --- 4. NUEVA FUNCIÓN MÁGICA (ESTA ES LA QUE FALTABA) ---
-    // Esta función orquesta todo: Conversión de imagen -> Guardado
+    // Nueva función, ya contiene logica que decide si editar o crear,
+    // llamar directamente al repositorio y agregar con imagen.
+
     fun guardarProductoConImagen(context: Context, producto: Producto, imageUri: Uri?) {
         viewModelScope.launch {
             try {
-                // 1. Empezamos con la imagen que ya tenía el producto (logo, url vieja o base64 viejo)
+                // imagen que ya tenía el producto
                 var stringImagenFinal = producto.imageUrl
 
-                // 2. Si el usuario seleccionó una foto NUEVA (de galería o cámara)
+                // si el usuario selecciona una NUEVA foto, la convierte a base64
                 if (imageUri != null && imageUri.toString().contains("content://")) {
 
-                    // Convertimos la URI a Texto Base64 usando tu nueva utilidad
                     val base64Image = ImageUtil.uriToBase64(context, imageUri)
 
                     if (base64Image != null) {
@@ -143,17 +141,17 @@ class ProductViewModel(
                     }
                 }
 
-                // 3. Actualizamos el objeto con la imagen procesada
+                // Actualizar el objeto
                 val productoParaGuardar = producto.copy(imageUrl = stringImagenFinal)
 
-                // 4. Decidimos si es CREAR o EDITAR
+                // Decidir si es CREAR o EDITAR
                 if (producto.id == null) {
                     repository.addProducto(productoParaGuardar)
                 } else {
                     repository.updateProducto(productoParaGuardar)
                 }
 
-                // 5. Notificamos éxito y recargamos listas
+                // Notificar éxito en la operación y recargar las listas
                 _reloadTrigger.emit(Unit)
                 loadCategorias()
                 _operacionExitosa.value = true

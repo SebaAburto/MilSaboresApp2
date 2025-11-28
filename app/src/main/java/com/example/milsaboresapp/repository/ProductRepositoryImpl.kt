@@ -7,7 +7,6 @@ class ProductRepositoryImpl : ProductRepository {
 
     private val api = RetrofitClient.instance
 
-    // ... (Los métodos de LECTURA/GET quedan IGUALES) ...
     override suspend fun getProductos(): List<Producto> = try { api.listarProductos() } catch (e: Exception) { emptyList() }
     override suspend fun getProductoPorId(id: String): Producto? = try { api.obtenerProducto(id) } catch (e: Exception) { null }
     override suspend fun obtenerProductoPorSku(sku: String): Producto? = getProductos().find { it.sku == sku }
@@ -22,13 +21,10 @@ class ProductRepositoryImpl : ProductRepository {
         return cats
     }
 
-    // --- CAMBIOS EN ESCRITURA (CRUD) ---
-
     override suspend fun addProducto(producto: Producto) {
-        // Obtenemos la respuesta cruda y llamamos a .string() para leerla y cerrar el flujo.
-        // Esto evita el error de JSON.
         val response = api.guardarProducto(producto)
-        response.string()
+        response.string() //se usa response.string() porque se espera una respuesta JSON,
+                          //(backend manda texto plano), asi que se transforma a string.
     }
 
     override suspend fun updateProducto(producto: Producto) {

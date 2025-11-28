@@ -25,7 +25,7 @@ import com.example.milsaboresapp.util.createImageUri
 
 @Composable
 fun ImageSelector(
-    imageModel: Any?, // 👈 CAMBIO CLAVE: Acepta Uri, Bitmap o Int
+    imageModel: Any?, // Acepta Uri, Bitmap o Int
     onUriSelected: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
@@ -59,7 +59,7 @@ fun ImageSelector(
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             if (imageModel != null) {
-                // Coil es inteligente: si le pasas un Bitmap (decodificado del Base64), lo muestra.
+                // Coil: si le pasas un Bitmap (decodificado del Base64), lo muestra.
                 Image(
                     painter = rememberAsyncImagePainter(imageModel),
                     contentDescription = "Imagen seleccionada",

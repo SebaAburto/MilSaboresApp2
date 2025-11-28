@@ -32,7 +32,7 @@ fun AdminProductosScreen(
     onAgregarClick: () -> Unit,
     onEditarClick: (Producto) -> Unit
 ) {
-    // Observamos los estados
+    // Observacion de los estados para actualizar la screen
     val productos by viewModel.productos.collectAsState()
     val categorias by viewModel.categorias.collectAsState()
     val categoriaSeleccionada by viewModel.categoriaSeleccionada.collectAsState()
@@ -82,7 +82,7 @@ fun AdminProductosScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            // --- FILTRO DE CATEGORÍAS ---
+            //FILTRO DE CATEGORÍAS
             var expanded by remember { mutableStateOf(false) }
 
             Box(modifier = Modifier.padding(16.dp)) {
@@ -126,7 +126,7 @@ fun AdminProductosScreen(
                 }
             }
 
-            // --- LISTA DE PRODUCTOS ---
+            // LISTA DE PRODUCTOS
             if (productos.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text("No hay productos disponibles", color = Color.Gray)
@@ -157,15 +157,15 @@ fun ProductoAdminItem(
 ) {
     val context = LocalContext.current
 
-    // LÓGICA DE IMAGEN (Para que se vea la miniatura)
+    // LÓGICA DE IMAGEN (miniatura)
     val modelData = remember(producto.imageUrl) {
         val url = producto.imageUrl ?: ""
         when {
-            // A. Base64
+            // Base64
             url.startsWith("data:image") -> ImageUtil.base64ToBitmap(url)
-            // B. URI / Web
+            // URI / Web
             url.contains("content://") || url.contains("http") || url.contains("android.resource") -> Uri.parse(url)
-            // C. Recurso Local
+            // Recurso Local
             else -> {
                 val resId = context.resources.getIdentifier(url, "drawable", context.packageName)
                 if (resId != 0) resId else R.drawable.logo
@@ -181,12 +181,12 @@ fun ProductoAdminItem(
     ) {
         Row(
             modifier = Modifier
-                .padding(8.dp) // Un poco menos de padding para aprovechar espacio
+                .padding(8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // --- MINIATURA DE IMAGEN ---
+            // MINIATURA DE IMAGEN
             Card(
                 modifier = Modifier.size(60.dp),
                 shape = MaterialTheme.shapes.small,
@@ -207,7 +207,7 @@ fun ProductoAdminItem(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // --- INFO DE TEXTO ---
+            //INFO DE TEXTO
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = producto.nombre,
@@ -234,7 +234,7 @@ fun ProductoAdminItem(
                 Text("Precio: $${producto.precio?.toInt()}", style = MaterialTheme.typography.bodySmall)
             }
 
-            // --- BOTONES DE ACCIÓN ---
+            //BOTONES DE ACCIÓN
             Row {
                 IconButton(onClick = onEdit) {
                     Icon(Icons.Default.Edit, contentDescription = "Editar", tint = MaterialTheme.colorScheme.primary)

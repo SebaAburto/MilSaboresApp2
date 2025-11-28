@@ -11,7 +11,7 @@ import kotlin.math.min
 
 object ImageUtil {
 
-    // 1. Convertir URI (Galería) -> TEXTO BASE64 (Para guardar en BD)
+    // Convertir URI (Galería) -> TEXTO BASE64 (Para guardar en BD)
     fun uriToBase64(context: Context, uri: Uri): String? {
         try {
             val inputStream: InputStream = context.contentResolver.openInputStream(uri) ?: return null
@@ -44,7 +44,7 @@ object ImageUtil {
         }
     }
 
-    // 2. Convertir TEXTO BASE64 (De BD) -> BITMAP (Para mostrar en pantalla)
+    // Convertir TEXTO BASE64 (De BD) -> BITMAP (Para mostrar en pantalla)
     fun base64ToBitmap(base64String: String): Bitmap? {
         return try {
             val cleanString = if (base64String.contains(",")) {

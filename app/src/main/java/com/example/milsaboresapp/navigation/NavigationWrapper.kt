@@ -26,17 +26,10 @@ fun NavigationWrapper() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
-    // --- 🎯 INICIALIZACIÓN DE DEPENDENCIAS ---
-
-    // 1. Repositorio (Sin argumentos ahora)
     val productRepository = remember { ProductRepositoryImpl() }
-
-    // 2. Factory para el ViewModel
     val productViewModelFactory = remember {
         ProductViewModelFactory(productRepository)
     }
-    // --- FIN DE INICIALIZACIÓN ---
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -88,7 +81,6 @@ fun NavigationWrapper() {
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                // ... (Rutas home, registro, login, etc. siguen igual) ...
                 composable("home") {
                     HomeScreen(
                         navigateToProductos = { navController.navigate("productos") },

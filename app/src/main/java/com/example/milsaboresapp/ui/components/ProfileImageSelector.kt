@@ -54,10 +54,10 @@ fun ProfileImageSelector(
         }
     }
 
-    // --- UI CIRCULAR (ESTILO PERFIL) ---
+    // UI CIRCULAR (ESTILO PERFIL)
     Box(
         modifier = Modifier
-            .size(120.dp) // Tamaño fijo pequeño
+            .size(120.dp)
             .clip(CircleShape) // Forma circular
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .clickable { showDialog = true },

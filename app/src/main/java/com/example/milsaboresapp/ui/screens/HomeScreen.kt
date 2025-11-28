@@ -31,17 +31,15 @@ fun HomeScreen(
     navigateToProductos: () -> Unit,
     onNavigateToProductDetail: (Producto) -> Unit
 ) {
-    // 1. Instanciamos el ViewModel para obtener los datos reales
+
     val productRepository = remember { ProductRepositoryImpl() }
     val viewModel: ProductViewModel = viewModel(
         factory = ProductViewModelFactory(productRepository)
     )
 
-    // 2. Escuchamos la lista de productos desde Firebase
     val todosLosProductos by viewModel.productos.collectAsState()
 
-    // 3. Filtramos SOLO los destacados
-    // Usamos 'remember' para no recalcular esto en cada frame, solo cuando cambie la lista
+    // Filtramos SOLO los destacados (remember para no calcular siempre)
     val productosDestacados = remember(todosLosProductos) {
         todosLosProductos.filter { it.destacado }
     }
@@ -67,7 +65,6 @@ fun HomeScreen(
         )
 
         // Título Destacados
-        // Solo mostramos esta sección si hay productos destacados
         if (productosDestacados.isNotEmpty()) {
             Text(
                 "¡Productos destacados!",
@@ -76,13 +73,12 @@ fun HomeScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
-            // 4. LazyRow con los datos REALES
+            // LazyRow con los datos REALES
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp), // Un poco de espacio a los lados
+                contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(productosDestacados) { producto ->
-                    // Caja para limitar el ancho de cada tarjeta en el carrusel
                     Box(modifier = Modifier.width(220.dp)) {
                         ProductCard(
                             producto = producto,
@@ -92,7 +88,7 @@ fun HomeScreen(
                 }
             }
         } else {
-            // Opcional: Mostrar un texto o loading si no hay destacados aún
+            //texto y indicador de "cargando..."
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

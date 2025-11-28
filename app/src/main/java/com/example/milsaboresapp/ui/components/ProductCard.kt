@@ -1,7 +1,6 @@
 package com.example.milsaboresapp.ui.components
 
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.milsaboresapp.R
@@ -35,7 +33,7 @@ fun ProductCard(
 ) {
     val context = LocalContext.current
 
-    // Lógica de Imagen (Igual que antes)
+    // Lógica de Imagen
     val modelData = remember(producto.imageUrl) {
         val url = producto.imageUrl ?: ""
         when {
@@ -89,7 +87,7 @@ fun ProductCard(
                         .height(200.dp)
                 )
 
-                // BADGE DE OFERTA (-20%)
+                // BADGE DE OFERTA (ej: -20%)
                 if (producto.enOferta && porcentajeDescuento > 0) {
                     Surface(
                         color = Color.Red,

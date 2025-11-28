@@ -39,8 +39,6 @@ fun ContenidoDetalle(
 ) {
     val context = LocalContext.current
 
-    // --- 1. LÓGICA DE DATOS (Stock y Ofertas) ---
-
     // Stock
     val stockActual = producto.stock ?: 0
     val stockMin = producto.stockMinimo ?: 5
@@ -72,8 +70,6 @@ fun ContenidoDetalle(
     // Formateador de dinero
     val formatter = remember { NumberFormat.getCurrencyInstance(Locale("es", "CL")).apply { maximumFractionDigits = 0 } }
 
-    // --- 2. UI ---
-
     // CAJA DE IMAGEN CON BADGES
     Box {
         AsyncImage(
@@ -103,7 +99,7 @@ fun ContenidoDetalle(
                 }
             }
         } else if (producto.enOferta && porcentajeDescuento > 0) {
-            // Badge: OFERTA (-20%)
+            // Badge: OFERTA (ej: -20%)
             Surface(
                 color = Color.Red,
                 shape = RoundedCornerShape(bottomStart = 16.dp),

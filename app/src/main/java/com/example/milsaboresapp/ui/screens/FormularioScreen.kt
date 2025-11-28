@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-// IMPORTAMOS EL COMPONENTE NUEVO
 import com.example.milsaboresapp.ui.components.ProfileImageSelector
 import com.example.milsaboresapp.ui.theme.ColorLight
 import com.example.milsaboresapp.viewmodel.FormularioViewModel
@@ -61,12 +60,10 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        // --- AQUÍ ESTABA EL ERROR, AHORA USAMOS EL DE PERFIL ---
         ProfileImageSelector(
             currentUri = estado.fotoPerfilUri,
             onUriSelected = viewModel::onFotoPerfilUriChange
         )
-        // -------------------------------------------------------
 
         Spacer(Modifier.height(8.dp))
 
@@ -77,7 +74,6 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             disabledContainerColor = Color.White
         )
 
-        // --- CAMPOS DE TEXTO (Sin cambios) ---
         OutlinedTextField(
             value = estado.nombre,
             onValueChange = viewModel::onNombreChange,
@@ -124,7 +120,7 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             colors = coloresFondo
         )
 
-        // --- CHECKBOX y BOTÓN ---
+        // CHECKBOX y BOTÓN
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = estado.aceptaTerminos,

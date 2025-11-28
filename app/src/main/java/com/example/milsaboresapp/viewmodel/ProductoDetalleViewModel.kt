@@ -9,11 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.example.milsaboresapp.model.Producto // Asegúrate de tener esta importación
-
-
-//Data class que representa el estado de la UI para la pantalla de detalle.
-//Está consolidada aquí.
+import com.example.milsaboresapp.model.Producto
 
 data class ProductoDetalleUiState(
     val producto: Producto? = null,

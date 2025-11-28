@@ -68,7 +68,7 @@ fun ProductoFormScreen(
             destacado = prod.destacado
             imagenOriginalBackend = prod.imageUrl
 
-            // CALCULAR PORCENTAJE AL EDITAR (Ingeniería inversa)
+            // CALCULAR PORCENTAJE AL EDITAR
             if (prod.enOferta && (prod.precio ?: 0.0) > 0) {
                 val precioNormal = prod.precio ?: 0.0
                 val precioOferta = prod.precioEnOferta ?: 0.0
@@ -206,12 +206,11 @@ fun ProductoFormScreen(
                     if (enOferta) {
                         val porcentajeVal = porcentajeDescuento.toDoubleOrNull() ?: 0.0
 
-                        // --- VALIDACIÓN NUEVA ---
+                        // VALIDACIÓN (debe ser mayor a 0)
                         if (porcentajeVal <= 0) {
                             Toast.makeText(context, "El descuento debe ser mayor a 0%", Toast.LENGTH_SHORT).show()
                             return@Button
                         }
-                        // ------------------------
 
                         // Restar el porcentaje al precio normal
                         precioOfertaVal = precioNormalVal - (precioNormalVal * (porcentajeVal / 100))
