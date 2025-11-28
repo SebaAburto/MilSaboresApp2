@@ -7,15 +7,19 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -24,8 +28,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.milsaboresapp.util.createImageUri
 
 @Composable
-fun ImageSelector(
-    imageModel: Any?, // 👈 CAMBIO CLAVE: Acepta Uri, Bitmap o Int
+fun ProfileImageSelector(
+    currentUri: Uri?,
     onUriSelected: (Uri?) -> Unit
 ) {
     val context = LocalContext.current
@@ -38,6 +42,7 @@ fun ImageSelector(
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
 
+    // Launchers
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { onUriSelected(it) }
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) onUriSelected(tempImageUri)
@@ -49,43 +54,38 @@ fun ImageSelector(
         }
     }
 
-    Card(
+    // --- UI CIRCULAR (ESTILO PERFIL) ---
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
+            .size(120.dp) // Tamaño fijo pequeño
+            .clip(CircleShape) // Forma circular
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .clickable { showDialog = true },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        contentAlignment = Alignment.Center
     ) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (imageModel != null) {
-                // Coil es inteligente: si le pasas un Bitmap (decodificado del Base64), lo muestra.
-                Image(
-                    painter = rememberAsyncImagePainter(imageModel),
-                    contentDescription = "Imagen seleccionada",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Agregar Foto",
-                        modifier = Modifier.size(64.dp),
-                        tint = Color.Gray
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("Toca para añadir foto", color = Color.Gray)
-                }
-            }
+        if (currentUri != null) {
+            Image(
+                painter = rememberAsyncImagePainter(currentUri),
+                contentDescription = "Foto de perfil",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Agregar Foto",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(48.dp)
+            )
         }
     }
 
+    // Diálogo
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("Seleccionar Imagen") },
-            text = { Text("Elige el origen:") },
+            title = { Text("Foto de Perfil") },
+            text = { Text("Selecciona el origen:") },
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false

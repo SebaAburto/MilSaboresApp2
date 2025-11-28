@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll // 🔑 Importación necesaria
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -32,16 +32,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.milsaboresapp.model.Formulario
-import com.example.milsaboresapp.ui.components.ImageSelector
+// IMPORTAMOS EL COMPONENTE NUEVO
+import com.example.milsaboresapp.ui.components.ProfileImageSelector
 import com.example.milsaboresapp.ui.theme.ColorLight
 import com.example.milsaboresapp.viewmodel.FormularioViewModel
-import coil.compose.AsyncImage
 
 @Composable
 fun FormularioScreen(navController: NavController? = null , viewModel: FormularioViewModel = viewModel()) {
@@ -49,7 +47,6 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
     var mostrarCheck by remember { mutableStateOf(false) }
 
     Column(
-
         Modifier
             .fillMaxSize()
             .background(ColorLight)
@@ -61,15 +58,15 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
         Text("Registrarse",
             style = MaterialTheme.typography.headlineMedium,
             fontSize = 25.sp,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        //Selector de Imagen
-        ImageSelector(
+        // --- AQUÍ ESTABA EL ERROR, AHORA USAMOS EL DE PERFIL ---
+        ProfileImageSelector(
             currentUri = estado.fotoPerfilUri,
             onUriSelected = viewModel::onFotoPerfilUriChange
         )
+        // -------------------------------------------------------
 
         Spacer(Modifier.height(8.dp))
 
@@ -80,16 +77,13 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             disabledContainerColor = Color.White
         )
 
-        // --- CAMPOS DE TEXTO ---
-
+        // --- CAMPOS DE TEXTO (Sin cambios) ---
         OutlinedTextField(
             value = estado.nombre,
             onValueChange = viewModel::onNombreChange,
             label = { Text("Nombre") },
             isError = estado.errores.nombre != null,
-            supportingText = {
-                estado.errores.nombre?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-            },
+            supportingText = { estado.errores.nombre?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
             modifier = Modifier.fillMaxWidth(),
             colors = coloresFondo
         )
@@ -98,9 +92,7 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             onValueChange = viewModel::onCorreoChange,
             label = { Text("Correo") },
             isError = estado.errores.correo != null,
-            supportingText = {
-                estado.errores.correo?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-            },
+            supportingText = { estado.errores.correo?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
             modifier = Modifier.fillMaxWidth(),
             colors = coloresFondo
         )
@@ -109,9 +101,7 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             onValueChange = viewModel::onClaveChange,
             label = { Text("Contraseña") },
             isError = estado.errores.clave != null,
-            supportingText = {
-                estado.errores.clave?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-            },
+            supportingText = { estado.errores.clave?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
             modifier = Modifier.fillMaxWidth(),
             colors = coloresFondo
         )
@@ -120,9 +110,7 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             onValueChange = viewModel::onRepetirClaveChange,
             label = { Text("Repetir contraseña") },
             isError = estado.errores.repetirClave != null,
-            supportingText = {
-                estado.errores.repetirClave?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-            },
+            supportingText = { estado.errores.repetirClave?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
             modifier = Modifier.fillMaxWidth(),
             colors = coloresFondo
         )
@@ -131,9 +119,7 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             onValueChange = viewModel::onDireccionChange,
             label = { Text("Direccion") },
             isError = estado.errores.direccion != null,
-            supportingText = {
-                estado.errores.direccion?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-            },
+            supportingText = { estado.errores.direccion?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
             modifier = Modifier.fillMaxWidth(),
             colors = coloresFondo
         )
@@ -150,20 +136,17 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
                 )
             )
             Text("Acepto los términos y condiciones")
-
         }
+
         Button(
             onClick = {
                 if (viewModel.validarFormulario()) {
                     mostrarCheck = true
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp), // El botón ahora será visible al hacer scroll
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
             enabled = estado.aceptaTerminos,
-
-            ) {
+        ) {
             Text("Crear cuenta")
         }
 
@@ -175,15 +158,11 @@ fun FormularioScreen(navController: NavController? = null , viewModel: Formulari
             Text(
                 "✔ Cuenta creada con éxito",
                 color = Color(0xFF388E3C),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
         }
 
-        Spacer(Modifier.height(30.dp)) // Añadir espacio extra al final para scroll
+        Spacer(Modifier.height(30.dp))
     }
 }
-
-// ... (Resto del código: ResumenScreen y Preview)

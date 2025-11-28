@@ -1,9 +1,12 @@
 package com.example.milsaboresapp.viewmodel
 
+import android.content.Context // 👈 NECESARIO
+import android.net.Uri         // 👈 NECESARIO
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.milsaboresapp.model.Producto
 import com.example.milsaboresapp.repository.ProductRepository
+import com.example.milsaboresapp.util.ImageUtil // 👈 TU NUEVA UTILIDAD
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -69,9 +72,8 @@ class ProductViewModel(
         _mensajeError.value = null
     }
 
-    // --- 3. FUNCIONES CRUD (Con manejo de errores y estados) ---
+    // --- 3. FUNCIONES CRUD ---
 
-    // Obtener un producto por ID (Para llenar el formulario al editar)
     fun obtenerProductoPorId(id: String) {
         viewModelScope.launch {
             try {
@@ -83,13 +85,14 @@ class ProductViewModel(
         }
     }
 
+    // Funciones básicas (usadas internamente o para operaciones sin foto nueva)
     fun addProducto(producto: Producto) {
         viewModelScope.launch {
             try {
                 repository.addProducto(producto)
-                _reloadTrigger.emit(Unit) // Recargar lista
-                loadCategorias()          // Recargar categorías
-                _operacionExitosa.value = true // ¡Avisar a la pantalla que termine!
+                _reloadTrigger.emit(Unit)
+                loadCategorias()
+                _operacionExitosa.value = true
             } catch (e: Exception) {
                 _mensajeError.value = "Error al guardar: ${e.message}"
             }
@@ -102,7 +105,7 @@ class ProductViewModel(
                 repository.updateProducto(producto)
                 _reloadTrigger.emit(Unit)
                 loadCategorias()
-                _operacionExitosa.value = true // ¡Avisar a la pantalla que termine!
+                _operacionExitosa.value = true
             } catch (e: Exception) {
                 _mensajeError.value = "Error al actualizar: ${e.message}"
             }
@@ -115,9 +118,48 @@ class ProductViewModel(
                 repository.deleteProducto(producto)
                 _reloadTrigger.emit(Unit)
                 loadCategorias()
-                // Aquí no ponemos operacionExitosa = true porque delete ocurre en la misma pantalla
             } catch (e: Exception) {
                 _mensajeError.value = "Error al eliminar: ${e.message}"
+            }
+        }
+    }
+
+    // --- 4. NUEVA FUNCIÓN MÁGICA (ESTA ES LA QUE FALTABA) ---
+    // Esta función orquesta todo: Conversión de imagen -> Guardado
+    fun guardarProductoConImagen(context: Context, producto: Producto, imageUri: Uri?) {
+        viewModelScope.launch {
+            try {
+                // 1. Empezamos con la imagen que ya tenía el producto (logo, url vieja o base64 viejo)
+                var stringImagenFinal = producto.imageUrl
+
+                // 2. Si el usuario seleccionó una foto NUEVA (de galería o cámara)
+                if (imageUri != null && imageUri.toString().contains("content://")) {
+
+                    // Convertimos la URI a Texto Base64 usando tu nueva utilidad
+                    val base64Image = ImageUtil.uriToBase64(context, imageUri)
+
+                    if (base64Image != null) {
+                        stringImagenFinal = base64Image
+                    }
+                }
+
+                // 3. Actualizamos el objeto con la imagen procesada
+                val productoParaGuardar = producto.copy(imageUrl = stringImagenFinal)
+
+                // 4. Decidimos si es CREAR o EDITAR
+                if (producto.id == null) {
+                    repository.addProducto(productoParaGuardar)
+                } else {
+                    repository.updateProducto(productoParaGuardar)
+                }
+
+                // 5. Notificamos éxito y recargamos listas
+                _reloadTrigger.emit(Unit)
+                loadCategorias()
+                _operacionExitosa.value = true
+
+            } catch (e: Exception) {
+                _mensajeError.value = "Error al procesar imagen: ${e.message}"
             }
         }
     }
