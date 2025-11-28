@@ -87,4 +87,22 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Kotest
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.0")
+
+    // JUnit 5
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+
+    // MockK
+    testImplementation("io.mockk:mockk:1.13.10")
+
+    // Compose UI Test
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.2")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.2")
+
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
+    }
 }
