@@ -92,3 +92,8 @@ Presiona Run ▶️.
 Sebastian Aburto
 
 Iván Santander
+
+
+
+<img width="850" height="470" alt="Captura de pantalla 2025-12-03 165704" src="https://github.com/user-attachments/assets/94d91ded-aab3-474a-953d-393fc3a40e5f" />
+
